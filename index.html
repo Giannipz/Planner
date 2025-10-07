@@ -22,6 +22,7 @@
             overflow: hidden;
             touch-action: pan-y;
             height: 100vh;
+            padding-top: env(safe-area-inset-top);
         }
 
         .login-screen {
@@ -79,9 +80,9 @@
         .header {
             background: linear-gradient(135deg, #2196F3 0%, #1976D2 100%);
             color: white;
-            padding: 8px 12px 6px 12px;
+            padding: 4px 10px 4px 10px;
             text-align: center;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
             position: relative;
             z-index: 10;
         }
@@ -90,27 +91,29 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 4px;
+            margin-bottom: 3px;
             gap: 6px;
             position: relative;
+            min-height: 36px;
         }
 
         .today-btn {
-            background: rgba(255,255,255,0.25);
-            border: 1px solid rgba(255,255,255,0.4);
+            background: rgba(255,255,255,0.3);
+            border: 1.5px solid rgba(255,255,255,0.5);
             color: white;
-            padding: 6px 12px;
-            border-radius: 12px;
-            font-size: 12px;
+            padding: 8px 14px;
+            border-radius: 14px;
+            font-size: 13px;
             font-weight: 700;
             cursor: pointer;
             transition: all 0.2s;
             flex-shrink: 0;
             white-space: nowrap;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
         .today-btn:active {
-            background: rgba(255,255,255,0.4);
+            background: rgba(255,255,255,0.5);
             transform: scale(0.95);
         }
 
@@ -217,24 +220,25 @@
 
         .container {
             position: relative;
-            height: calc(100vh - 100px);
+            height: calc(100vh - 110px - env(safe-area-inset-top));
             overflow: hidden;
             perspective: 1000px;
+            margin-top: 8px;
         }
 
         .day-view {
             position: absolute;
             width: 90%;
             left: 5%;
-            height: calc(100% - 40px);
-            overflow-y: hidden;
+            height: calc(100% - 20px);
+            overflow-y: auto;
             -webkit-overflow-scrolling: touch;
             transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
             will-change: transform, opacity;
             border-radius: 12px;
             box-shadow: 0 4px 20px rgba(0,0,0,0.1);
             background: #f5f5f5;
-            margin-top: 20px;
+            margin-top: 10px;
             display: flex;
             flex-direction: column;
             padding: 0px;
@@ -271,7 +275,7 @@
             align-items: center;
             flex: 1;
             min-height: 0;
-            max-height: 24px;
+            max-height: 28px;
             cursor: pointer;
             transition: transform 0.1s;
             touch-action: manipulation;
