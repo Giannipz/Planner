@@ -368,6 +368,8 @@
             width: 90%;
             max-width: 400px;
             animation: slideUp 0.3s;
+            max-height: 90vh;
+            overflow-y: auto;
         }
 
         @keyframes slideUp {
@@ -511,7 +513,7 @@
         <div class="login-box">
             <div class="login-title">📅 Organizzatore</div>
             <div class="login-subtitle">Sincronizza i tuoi eventi su tutti i dispositivi</div>
-            <button class="google-btn" onclick="loginWithGoogle()">
+            <button class="google-btn" id="loginBtn">
                 <svg width="18" height="18" xmlns="http://www.w3.org/2000/svg"><g fill="none" fill-rule="evenodd"><path d="M17.6 9.2l-.1-1.8H9v3.4h4.8C13.6 12 13 13 12 13.6v2.2h3a8.8 8.8 0 0 0 2.6-6.6z" fill="#4285F4"/><path d="M9 18c2.4 0 4.5-.8 6-2.2l-3-2.2a5.4 5.4 0 0 1-8-2.9H1V13a9 9 0 0 0 8 5z" fill="#34A853"/><path d="M4 10.7a5.4 5.4 0 0 1 0-3.4V5H1a9 9 0 0 0 0 8l3-2.3z" fill="#FBBC05"/><path d="M9 3.6c1.3 0 2.5.4 3.4 1.3L15 2.3A9 9 0 0 0 1 5l3 2.4a5.4 5.4 0 0 1 5-3.7z" fill="#EA4335"/></g></svg>
                 Accedi con Google
             </button>
@@ -521,13 +523,13 @@
     <div id="appScreen" style="display:none;">
         <div class="header">
             <div class="header-top">
-                <button class="today-btn" onclick="goToToday()">📅 Oggi</button>
+                <button class="today-btn" id="todayBtn">📅 Oggi</button>
                 <div class="date-display" id="dateDisplay">Caricamento...</div>
                 <div class="user-menu">
-                    <img id="userAvatar" class="user-avatar" onclick="toggleUserMenu()" src="" alt="User">
+                    <img id="userAvatar" class="user-avatar" src="" alt="User">
                     <div id="userDropdown" class="user-dropdown">
                         <div class="user-dropdown-item" id="userName" style="font-weight:600;"></div>
-                        <div class="user-dropdown-item" onclick="logout()">Esci</div>
+                        <div class="user-dropdown-item" id="logoutBtn">Esci</div>
                     </div>
                 </div>
             </div>
@@ -560,14 +562,14 @@
                 <textarea id="eventDescription" placeholder="Dettagli aggiuntivi..."></textarea>
             </div>
             <div class="modal-buttons">
-                <button class="btn btn-secondary" onclick="closeModal()">Annulla</button>
-                <button class="btn btn-danger" id="deleteBtn" style="display:none;" onclick="deleteEvent()">Elimina</button>
-                <button class="btn btn-primary" onclick="saveEvent()">Salva</button>
+                <button class="btn btn-secondary" id="cancelBtn">Annulla</button>
+                <button class="btn btn-danger" id="deleteBtn" style="display:none;">Elimina</button>
+                <button class="btn btn-primary" id="saveBtn">Salva</button>
             </div>
-            <button class="btn btn-calendar" id="calendarBtn" style="display:none;" onclick="addExistingToCalendar()">
+            <button class="btn btn-calendar" id="calendarBtn" style="display:none;">
                 📅 Aggiungi a Google Calendar
             </button>
-            <button class="btn btn-danger" id="stopRepeatBtn" style="display:none; margin-top: 8px;" onclick="stopRepeat()">
+            <button class="btn btn-danger" id="stopRepeatBtn" style="display:none; margin-top: 8px;">
                 🛑 Ferma Ripetizione
             </button>
             <div id="newEventCalendarOption" style="margin-top: 12px; text-align: center;">
@@ -583,11 +585,12 @@
         </div>
     </div>
 
-    <script type="module">
-        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
-        import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
-        import { getFirestore, collection, doc, setDoc, getDoc, getDocs, deleteDoc, onSnapshot, query, where } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
 
+    <script>
+        // Firebase Config
         const firebaseConfig = {
             apiKey: "AIzaSyCy2OtSr108Kt4P0yODARUSUj8gRvXa0Ng",
             authDomain: "syncplanner-49faf.firebaseapp.com",
@@ -598,57 +601,12 @@
             measurementId: "G-YJTRCFM59G"
         };
 
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
-        
-        window.auth = auth;
-        window.db = db;
-        window.currentUser = null;
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
 
-        // Auth state observer
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-                window.currentUser = user;
-                document.getElementById('loginScreen').style.display = 'none';
-                document.getElementById('appScreen').style.display = 'block';
-                document.getElementById('userAvatar').src = user.photoURL;
-                document.getElementById('userName').textContent = user.displayName;
-                initializeApp();
-            } else {
-                document.getElementById('loginScreen').style.display = 'flex';
-                document.getElementById('appScreen').style.display = 'none';
-            }
-        });
-
-        window.loginWithGoogle = async () => {
-            const provider = new GoogleAuthProvider();
-            try {
-                await signInWithPopup(auth, provider);
-            } catch (error) {
-                alert('Errore nel login: ' + error.message);
-            }
-        };
-
-        window.logout = async () => {
-            if (confirm('Vuoi uscire?')) {
-                await signOut(auth);
-            }
-        };
-
-        window.toggleUserMenu = () => {
-            document.getElementById('userDropdown').classList.toggle('show');
-        };
-
-        // Close dropdown when clicking outside
-        document.addEventListener('click', (e) => {
-            if (!e.target.closest('.user-menu')) {
-                document.getElementById('userDropdown').classList.remove('show');
-            }
-        });
-    </script>
-
-    <script>
+        let currentUser = null;
         let currentDate = new Date();
         let currentHour = null;
         let touchStartX = 0;
@@ -662,19 +620,58 @@
         const nextDayEl = document.getElementById('nextDay');
         const prevDayEl = document.getElementById('prevDay');
 
-        function initializeApp() {
-            updateDisplay();
-            setupTouchEvents();
-        }
+        // Auth State Observer
+        auth.onAuthStateChanged((user) => {
+            if (user) {
+                currentUser = user;
+                document.getElementById('loginScreen').style.display = 'none';
+                document.getElementById('appScreen').style.display = 'block';
+                document.getElementById('userAvatar').src = user.photoURL || '';
+                document.getElementById('userName').textContent = user.displayName || user.email;
+                initializeApp();
+            } else {
+                document.getElementById('loginScreen').style.display = 'flex';
+                document.getElementById('appScreen').style.display = 'none';
+            }
+        });
 
-        // Firestore functions
+        // Login
+        document.getElementById('loginBtn').addEventListener('click', async () => {
+            const provider = new firebase.auth.GoogleAuthProvider();
+            try {
+                await auth.signInWithPopup(provider);
+            } catch (error) {
+                console.error('Login error:', error);
+                alert('Errore nel login: ' + error.message);
+            }
+        });
+
+        // Logout
+        document.getElementById('logoutBtn').addEventListener('click', async () => {
+            if (confirm('Vuoi uscire?')) {
+                await auth.signOut();
+            }
+        });
+
+        // User Menu Toggle
+        document.getElementById('userAvatar').addEventListener('click', () => {
+            document.getElementById('userDropdown').classList.toggle('show');
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.user-menu')) {
+                document.getElementById('userDropdown').classList.remove('show');
+            }
+        });
+
+        // Firestore Functions
         async function getEventsFromFirestore(date) {
             const dateStr = formatDate(date);
-            const userId = window.currentUser.uid;
-            const eventsRef = collection(window.db, `users/${userId}/events`);
-            const q = query(eventsRef, where('date', '==', dateStr));
+            const userId = currentUser.uid;
             
-            const snapshot = await getDocs(q);
+            const snapshot = await db.collection('users').doc(userId).collection('events')
+                .where('date', '==', dateStr).get();
+            
             const events = {};
             snapshot.forEach(doc => {
                 const data = doc.data();
@@ -685,9 +682,8 @@
         }
 
         async function getRecurringEventsFromFirestore() {
-            const userId = window.currentUser.uid;
-            const recurringRef = collection(window.db, `users/${userId}/recurring`);
-            const snapshot = await getDocs(recurringRef);
+            const userId = currentUser.uid;
+            const snapshot = await db.collection('users').doc(userId).collection('recurring').get();
             
             const recurring = {};
             snapshot.forEach(doc => {
@@ -698,48 +694,48 @@
         }
 
         async function saveEventToFirestore(date, hour, title, description) {
-            const userId = window.currentUser.uid;
+            const userId = currentUser.uid;
             const dateStr = formatDate(date);
             const eventId = `${dateStr}_${hour}`;
             
-            await setDoc(doc(window.db, `users/${userId}/events`, eventId), {
+            await db.collection('users').doc(userId).collection('events').doc(eventId).set({
                 date: dateStr,
                 hour: hour,
                 title: title,
                 description: description,
-                updatedAt: new Date()
+                updatedAt: firebase.firestore.FieldValue.serverTimestamp()
             });
             
             updateSyncStatus('● Sincronizzato');
         }
 
         async function saveRecurringEventToFirestore(hour, title, description, startDate) {
-            const userId = window.currentUser.uid;
+            const userId = currentUser.uid;
             const recurringId = `${hour}_${Date.now()}`;
             
-            await setDoc(doc(window.db, `users/${userId}/recurring`, recurringId), {
+            await db.collection('users').doc(userId).collection('recurring').doc(recurringId).set({
                 hour: hour,
                 title: title,
                 description: description,
                 startDate: startDate,
-                createdAt: new Date()
+                createdAt: firebase.firestore.FieldValue.serverTimestamp()
             });
             
             updateSyncStatus('● Sincronizzato');
         }
 
         async function deleteEventFromFirestore(date, hour) {
-            const userId = window.currentUser.uid;
+            const userId = currentUser.uid;
             const dateStr = formatDate(date);
             const eventId = `${dateStr}_${hour}`;
             
-            await deleteDoc(doc(window.db, `users/${userId}/events`, eventId));
+            await db.collection('users').doc(userId).collection('events').doc(eventId).delete();
             updateSyncStatus('● Sincronizzato');
         }
 
         async function removeRecurringEventFromFirestore(recurringId) {
-            const userId = window.currentUser.uid;
-            await deleteDoc(doc(window.db, `users/${userId}/recurring`, recurringId));
+            const userId = currentUser.uid;
+            await db.collection('users').doc(userId).collection('recurring').doc(recurringId).delete();
             updateSyncStatus('● Sincronizzato');
         }
 
@@ -790,21 +786,24 @@
                 const hasEvent = event && event.title;
                 const timeStr = `${hour.toString().padStart(2, '0')}:00`;
                 
+                const eventTitle = hasEvent ? event.title.replace(/'/g, '&#39;').replace(/"/g, '&quot;') : '';
+                const eventDesc = hasEvent && event.description ? event.description.replace(/'/g, '&#39;').replace(/"/g, '&quot;') : '';
+                
                 html += `
                     <div class="hour-slot ${hasEvent ? 'has-event' : ''}" onclick="openModal(${hour})">
                         <div class="hour-time">${timeStr}</div>
                         <div class="event-content">
                             ${hasEvent ? `
                                 <div class="event-title">
-                                    ${event.isRecurring ? '🔁 ' : ''}${event.title}
+                                    ${event.isRecurring ? '🔁 ' : ''}${eventTitle}
                                 </div>
-                                ${event.description ? `<div class="event-description">${event.description}</div>` : ''}
+                                ${event.description ? `<div class="event-description">${eventDesc}</div>` : ''}
                             ` : `
                                 <div class="empty-state">Nessun evento</div>
                             `}
                         </div>
                         ${hasEvent ? `
-                            <button class="share-btn" onclick="shareEvent(event, '${formatDate(date)}', ${hour}, '${event.title.replace(/'/g, "\\'")}', '${event.description ? event.description.replace(/'/g, "\\'") : ''}')">
+                            <button class="share-btn" onclick="event.stopPropagation(); shareEvent('${formatDate(date)}', ${hour}, '${eventTitle}', '${eventDesc}')">
                                 📤
                             </button>
                         ` : ''}
@@ -869,15 +868,15 @@
             }, 100);
         }
 
-        window.jumpToDate = (isoDate) => {
+        function jumpToDate(isoDate) {
             currentDate = new Date(isoDate);
             updateDisplay();
-        };
+        }
 
-        window.goToToday = () => {
+        document.getElementById('todayBtn').addEventListener('click', () => {
             currentDate = new Date();
             updateDisplay();
-        };
+        });
 
         function changeDay(offset) {
             const newDate = new Date(currentDate);
@@ -886,7 +885,7 @@
             updateDisplay();
         }
 
-        window.openModal = async (hour) => {
+        async function openModal(hour) {
             currentHour = hour;
             const events = await getEvents(currentDate);
             const existingEvent = events[hour];
@@ -894,7 +893,7 @@
             document.getElementById('modalTitle').textContent = 
                 existingEvent ? 'Modifica Evento' : 'Aggiungi Evento';
             document.getElementById('eventTitle').value = existingEvent ? existingEvent.title : '';
-            document.getElementById('eventDescription').value = existingEvent ? existingEvent.description : '';
+            document.getElementById('eventDescription').value = existingEvent ? existingEvent.description || '' : '';
             
             document.getElementById('deleteBtn').style.display = existingEvent ? 'block' : 'none';
             document.getElementById('calendarBtn').style.display = existingEvent ? 'block' : 'none';
@@ -909,14 +908,16 @@
             }
             
             document.getElementById('eventModal').classList.add('show');
-        };
+        }
 
-        window.closeModal = () => {
+        function closeModal() {
             document.getElementById('eventModal').classList.remove('show');
             currentHour = null;
-        };
+        }
 
-        window.saveEvent = async () => {
+        document.getElementById('cancelBtn').addEventListener('click', closeModal);
+
+        document.getElementById('saveBtn').addEventListener('click', async () => {
             const title = document.getElementById('eventTitle').value.trim();
             if (!title) {
                 alert('Inserisci un titolo per l\'evento');
@@ -927,7 +928,7 @@
             
             const description = document.getElementById('eventDescription').value.trim();
             const addToCalendar = document.getElementById('addToCalendar').checked;
-            const repeatDaily = document.getElementById('repeatDaily') && document.getElementById('repeatDaily').checked;
+            const repeatDaily = document.getElementById('repeatDaily').checked;
             
             await saveEventToFirestore(currentDate, currentHour, title, description);
             
@@ -942,9 +943,9 @@
             }
             
             closeModal();
-        };
+        });
 
-        window.deleteEvent = async () => {
+        document.getElementById('deleteBtn').addEventListener('click', async () => {
             const events = await getEvents(currentDate);
             const event = events[currentHour];
             
@@ -967,9 +968,9 @@
             
             await updateDisplay();
             closeModal();
-        };
+        });
 
-        window.stopRepeat = async () => {
+        document.getElementById('stopRepeatBtn').addEventListener('click', async () => {
             const recurringId = document.getElementById('stopRepeatBtn').getAttribute('data-recurring-id');
             if (recurringId && confirm('Vuoi fermare la ripetizione di questo evento per tutti i giorni futuri?')) {
                 updateSyncStatus('⟳ Sincronizzazione...');
@@ -977,15 +978,15 @@
                 await updateDisplay();
                 closeModal();
             }
-        };
+        });
 
-        window.addExistingToCalendar = () => {
+        document.getElementById('calendarBtn').addEventListener('click', () => {
             const title = document.getElementById('eventTitle').value.trim();
             const description = document.getElementById('eventDescription').value.trim();
             if (title) {
                 openGoogleCalendar(title, description, currentDate, currentHour);
             }
-        };
+        });
 
         function openGoogleCalendar(title, description, date, hour) {
             const startDate = new Date(date);
@@ -1014,9 +1015,7 @@
             window.open(calendarUrl, '_blank');
         }
 
-        window.shareEvent = (e, date, hour, title, description) => {
-            e.stopPropagation();
-            
+        function shareEvent(date, hour, title, description) {
             const eventDate = new Date(date);
             const dateStr = eventDate.toLocaleDateString('it-IT', { 
                 weekday: 'long', 
@@ -1040,7 +1039,12 @@
                     alert('Impossibile condividere l\'evento');
                 });
             }
-        };
+        }
+
+        function initializeApp() {
+            updateDisplay();
+            setupTouchEvents();
+        }
 
         function setupTouchEvents() {
             container.addEventListener('touchstart', (e) => {
