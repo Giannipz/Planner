@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#2196F3">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Organizzatore Settimanale</title>
+    <link rel="manifest" href="data:application/json;base64,ewogICJuYW1lIjogIk9yZ2FuaXp6YXRvcmUgU2V0dGltYW5hbGUiLAogICJzaG9ydF9uYW1lIjogIk9yZ2FuaXp6YXRvcmUiLAogICJzdGFydF91cmwiOiAiLiIsCiAgImRpc3BsYXkiOiAic3RhbmRhbG9uZSIsCiAgImJhY2tncm91bmRfY29sb3IiOiAiI2ZmZmZmZiIsCiAgInRoZW1lX2NvbG9yIjogIiMyMTk2RjMiLAogICJpY29ucyI6IFsKICAgIHsKICAgICAgInNyYyI6ICJkYXRhOmltYWdlL3N2Zyt4bWwsJTNDc3ZnIHhtbG5zPSdodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2Zycgd2lkdGg9JzE5MicgaGVpZ2h0PScxOTInJTNFJTNDcmVjdCB3aWR0aD0nMTkyJyBoZWlnaHQ9JzE5MicgZmlsbD0nJTIzMjE5NkYzJy8lM0UlM0N0ZXh0IHg9Jzk2JyB5PScxMjAnIGZvbnQtc2l6ZT0nODAnIHRleHQtYW5jaG9yPSdtaWRkbGUnIGZpbGw9J3doaXRlJyBmb250LWZhbWlseT0nc2Fucy1zZXJpZiclM0UlRjAlOUYlOTMlODUlM0MvdGV4dCUzRSUzQy9zdmclM0UiLAogICAgICAic2l6ZXMiOiAiMTkyeDE5MiIsCiAgICAgICJ0eXBlIjogImltYWdlL3N2Zyt4bWwiCiAgICB9CiAgXQp9">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #2196F3 0%, #1976D2 100%);
+            overflow: hidden;
+            touch-action: pan-y;
+            height: 100vh;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2196F3 0%, #1976D2 100%);
+            color: white;
+            padding: 20px 16px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            position: relative;
+            z-index: 10;
+        }
+
+        .date-display {
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .day-indicator {
+            font-size: 14px;
+            opacity: 0.9;
+            margin-top: 4px;
+        }
+
+        .container {
+            position: relative;
+            height: calc(100vh - 80px);
+            overflow: hidden;
+            perspective: 1000px;
+        }
+
+        .day-view {
+            position: absolute;
+            width: 90%;
+            left: 5%;
+            height: calc(100% - 40px);
+            overflow-y: hidden;
+            -webkit-overflow-scrolling: touch;
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            will-change: transform, opacity;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            background: #f5f5f5;
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            padding: 8px 0;
+        }
+
+        .day-view.no-transition {
+            transition: none;
+        }
+
+        .day-view.left {
+            transform: translateX(-105%) scale(0.9);
+            opacity: 0.5;
+        }
+
+        .day-view.center {
+            transform: translateX(0) scale(1);
+            opacity: 1;
+            z-index: 10;
+        }
+
+        .day-view.right {
+            transform: translateX(105%) scale(0.9);
+            opacity: 0.5;
+        }
+
+        .swipe-indicator {
+            position: fixed;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 8px;
+            z-index: 1000;
+            pointer-events: none;
+            background: rgba(255,255,255,0.95);
+            padding: 6px 14px;
+            border-radius: 20px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.2);
+        }
+
+        .swipe-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(33, 150, 243, 0.3);
+            transition: all 0.3s;
+        }
+
+        .swipe-dot.active {
+            width: 24px;
+            border-radius: 4px;
+            background: #2196F3;
+        }
+
+
+
+        .hour-slot {
+            background: white;
+            margin: 2px 8px;
+            padding: 6px 10px;
+            border-radius: 6px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.08);
+            display: flex;
+            align-items: center;
+            flex: 1;
+            min-height: 0;
+            cursor: pointer;
+            transition: transform 0.1s;
+            touch-action: manipulation;
+        }
+
+        .hour-slot:active {
+            transform: scale(0.98);
+        }
+
+        .hour-time {
+            font-weight: bold;
+            font-size: 13px;
+            color: #2196F3;
+            min-width: 55px;
+        }
+
+        .event-content {
+            flex: 1;
+            margin-left: 12px;
+            overflow: hidden;
+        }
+
+        .event-title {
+            font-weight: 600;
+            font-size: 13px;
+            margin-bottom: 2px;
+            color: #333;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .event-description {
+            font-size: 11px;
+            color: #666;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .hour-slot.has-event {
+            background: linear-gradient(135deg, #E3F2FD 0%, #BBDEFB 100%);
+            border-left: 4px solid #2196F3;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            animation: fadeIn 0.2s;
+        }
+
+        .modal.show {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            width: 90%;
+            max-width: 400px;
+            animation: slideUp 0.3s;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-header {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .input-group {
+            margin-bottom: 16px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .input-group input,
+        .input-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            font-family: inherit;
+        }
+
+        .input-group textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 8px;
+            margin-top: 20px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: #2196F3;
+            color: white;
+        }
+
+        .btn-primary:active {
+            background: #1976D2;
+        }
+
+        .btn-secondary {
+            background: #f5f5f5;
+            color: #666;
+        }
+
+        .btn-secondary:active {
+            background: #e0e0e0;
+        }
+
+        .btn-danger {
+            background: #f44336;
+            color: white;
+        }
+
+        .btn-calendar {
+            background: #34A853;
+            color: white;
+            margin-top: 12px;
+            width: 100%;
+        }
+
+        .btn-calendar:active {
+            background: #2D8E47;
+        }
+
+        .install-prompt {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #333;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 24px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            display: none;
+            align-items: center;
+            gap: 12px;
+            z-index: 2000;
+        }
+
+        .install-prompt.show {
+            display: flex;
+        }
+
+        .install-btn {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .empty-state {
+            color: #999;
+            font-size: 12px;
+        }
+
+        .swipe-hint {
+            text-align: center;
+            color: #999;
+            font-size: 12px;
+            padding: 8px;
+            opacity: 0.7;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="date-display" id="dateDisplay">Caricamento...</div>
+        <div class="day-indicator">← Scorri per cambiare giorno →</div>
+    </div>
+
+    <div class="container" id="container">
+        <div class="day-view center" id="currentDay"></div>
+        <div class="day-view right" id="nextDay"></div>
+        <div class="day-view left" id="prevDay"></div>
+    </div>
+
+    <div class="swipe-indicator">
+        <div class="swipe-dot"></div>
+        <div class="swipe-dot active"></div>
+        <div class="swipe-dot"></div>
+    </div>
+
+    <div class="modal" id="eventModal">
+        <div class="modal-content">
+            <div class="modal-header" id="modalTitle">Aggiungi Evento</div>
+            <div class="input-group">
+                <label for="eventTitle">Titolo</label>
+                <input type="text" id="eventTitle" placeholder="Es: Riunione di lavoro">
+            </div>
+            <div class="input-group">
+                <label for="eventDescription">Descrizione (opzionale)</label>
+                <textarea id="eventDescription" placeholder="Dettagli aggiuntivi..."></textarea>
+            </div>
+            <div class="modal-buttons">
+                <button class="btn btn-secondary" onclick="closeModal()">Annulla</button>
+                <button class="btn btn-danger" id="deleteBtn" style="display:none;" onclick="deleteEvent()">Elimina</button>
+                <button class="btn btn-primary" onclick="saveEvent()">Salva</button>
+            </div>
+            <button class="btn btn-calendar" id="calendarBtn" style="display:none;" onclick="addExistingToCalendar()">
+                📅 Aggiungi a Google Calendar
+            </button>
+            <div id="newEventCalendarOption" style="margin-top: 12px; text-align: center;">
+                <label style="display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 14px; color: #666; cursor: pointer;">
+                    <input type="checkbox" id="addToCalendar" checked style="width: 18px; height: 18px; cursor: pointer;">
+                    <span>📅 Aggiungi anche a Google Calendar</span>
+                </label>
+            </div>
+        </div>
+    </div>
+
+    <div class="install-prompt" id="installPrompt">
+        <span>📱 Installa l'app sulla home screen!</span>
+        <button class="install-btn" onclick="installApp()">Installa</button>
+    </div>
+
+    <script>
+        let currentDate = new Date();
+        let currentHour = null;
+        let touchStartX = 0;
+        let touchEndX = 0;
+        let isSwiping = false;
+        let currentTranslate = 0;
+        let deferredPrompt;
+
+        const container = document.getElementById('container');
+        const currentDayEl = document.getElementById('currentDay');
+        const nextDayEl = document.getElementById('nextDay');
+        const prevDayEl = document.getElementById('prevDay');
+
+        // Service Worker
+        if ('serviceWorker' in navigator) {
+            const swCode = `
+                self.addEventListener('install', (e) => {
+                    e.waitUntil(
+                        caches.open('week-planner-v1').then((cache) => {
+                            return cache.addAll(['/']);
+                        })
+                    );
+                });
+                
+                self.addEventListener('fetch', (e) => {
+                    e.respondWith(
+                        caches.match(e.request).then((response) => {
+                            return response || fetch(e.request);
+                        })
+                    );
+                });
+            `;
+            
+            const blob = new Blob([swCode], { type: 'application/javascript' });
+            const swUrl = URL.createObjectURL(blob);
+            navigator.serviceWorker.register(swUrl);
+        }
+
+        // PWA Install
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            document.getElementById('installPrompt').classList.add('show');
+        });
+
+        function installApp() {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                deferredPrompt.userChoice.then((choiceResult) => {
+                    deferredPrompt = null;
+                    document.getElementById('installPrompt').classList.remove('show');
+                });
+            }
+        }
+
+        // Storage
+        function getEvents(date) {
+            const key = formatDate(date);
+            const stored = localStorage.getItem(key);
+            return stored ? JSON.parse(stored) : {};
+        }
+
+        function saveEventToStorage(date, hour, title, description) {
+            const key = formatDate(date);
+            const events = getEvents(date);
+            events[hour] = { title, description };
+            localStorage.setItem(key, JSON.stringify(events));
+        }
+
+        function deleteEventFromStorage(date, hour) {
+            const key = formatDate(date);
+            const events = getEvents(date);
+            delete events[hour];
+            localStorage.setItem(key, JSON.stringify(events));
+        }
+
+        function formatDate(date) {
+            return date.toISOString().split('T')[0];
+        }
+
+        function formatDateDisplay(date) {
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            return date.toLocaleDateString('it-IT', options);
+        }
+
+        function renderDay(date, container) {
+            const events = getEvents(date);
+            let html = '';
+            
+            // Solo ore dalle 7:00 alle 21:00
+            for (let hour = 7; hour <= 21; hour++) {
+                const event = events[hour];
+                const hasEvent = event && event.title;
+                const timeStr = `${hour.toString().padStart(2, '0')}:00`;
+                
+                html += `
+                    <div class="hour-slot ${hasEvent ? 'has-event' : ''}" onclick="openModal(${hour})">
+                        <div class="hour-time">${timeStr}</div>
+                        <div class="event-content">
+                            ${hasEvent ? `
+                                <div class="event-title">${event.title}</div>
+                                ${event.description ? `<div class="event-description">${event.description}</div>` : ''}
+                            ` : `
+                                <div class="empty-state">Nessun evento</div>
+                            `}
+                        </div>
+                    </div>
+                `;
+            }
+            
+            container.innerHTML = html;
+        }
+
+        function updateDisplay() {
+            document.getElementById('dateDisplay').textContent = formatDateDisplay(currentDate);
+            
+            // Renderizza giorno corrente
+            renderDay(currentDate, currentDayEl);
+            
+            // Renderizza giorno successivo
+            const nextDate = new Date(currentDate);
+            nextDate.setDate(nextDate.getDate() + 1);
+            renderDay(nextDate, nextDayEl);
+            
+            // Renderizza giorno precedente
+            const prevDate = new Date(currentDate);
+            prevDate.setDate(prevDate.getDate() - 1);
+            renderDay(prevDate, prevDayEl);
+        }
+
+        function changeDay(offset) {
+            const newDate = new Date(currentDate);
+            newDate.setDate(newDate.getDate() + offset);
+            currentDate = newDate;
+            updateDisplay();
+        }
+
+        function openModal(hour) {
+            currentHour = hour;
+            const events = getEvents(currentDate);
+            const event = events[hour];
+            
+            document.getElementById('modalTitle').textContent = 
+                event ? 'Modifica Evento' : 'Aggiungi Evento';
+            document.getElementById('eventTitle').value = event ? event.title : '';
+            document.getElementById('eventDescription').value = event ? event.description : '';
+            document.getElementById('deleteBtn').style.display = event ? 'block' : 'none';
+            document.getElementById('eventModal').classList.add('show');
+        }
+
+        function closeModal() {
+            document.getElementById('eventModal').classList.remove('show');
+            currentHour = null;
+        }
+
+        function saveEvent() {
+            const title = document.getElementById('eventTitle').value.trim();
+            if (!title) {
+                alert('Inserisci un titolo per l\'evento');
+                return;
+            }
+            
+            const description = document.getElementById('eventDescription').value.trim();
+            const addToCalendar = document.getElementById('addToCalendar').checked;
+            
+            // Salva nel localStorage
+            saveEventToStorage(currentDate, currentHour, title, description);
+            updateDisplay();
+            
+            // Aggiungi a Google Calendar se richiesto
+            if (addToCalendar) {
+                openGoogleCalendar(title, description, currentDate, currentHour);
+            }
+            
+            closeModal();
+        }
+
+        function openGoogleCalendar(title, description, date, hour) {
+            // Costruisci la data/ora di inizio
+            const startDate = new Date(date);
+            startDate.setHours(hour, 0, 0, 0);
+            
+            // Data/ora di fine (1 ora dopo)
+            const endDate = new Date(startDate);
+            endDate.setHours(hour + 1, 0, 0, 0);
+            
+            // Formatta le date per Google Calendar (formato: YYYYMMDDTHHmmSS)
+            const formatGoogleDate = (d) => {
+                const year = d.getFullYear();
+                const month = String(d.getMonth() + 1).padStart(2, '0');
+                const day = String(d.getDate()).padStart(2, '0');
+                const hours = String(d.getHours()).padStart(2, '0');
+                const minutes = String(d.getMinutes()).padStart(2, '0');
+                return `${year}${month}${day}T${hours}${minutes}00`;
+            };
+            
+            // Costruisci l'URL di Google Calendar
+            const params = new URLSearchParams({
+                action: 'TEMPLATE',
+                text: title,
+                details: description,
+                dates: `${formatGoogleDate(startDate)}/${formatGoogleDate(endDate)}`
+            });
+            
+            const calendarUrl = `https://calendar.google.com/calendar/render?${params.toString()}`;
+            
+            // Apri Google Calendar in una nuova finestra
+            window.open(calendarUrl, '_blank');
+        }
+
+        function deleteEvent() {
+            if (confirm('Vuoi eliminare questo evento?')) {
+                deleteEventFromStorage(currentDate, currentHour);
+                updateDisplay();
+                closeModal();
+            }
+        }
+
+        // Touch events
+        let touchStartY = 0;
+        
+        container.addEventListener('touchstart', (e) => {
+            touchStartX = e.changedTouches[0].screenX;
+            touchStartY = e.changedTouches[0].screenY;
+            isSwiping = false;
+            
+            // Rimuovi transizioni per movimento fluido
+            currentDayEl.classList.add('no-transition');
+            nextDayEl.classList.add('no-transition');
+            prevDayEl.classList.add('no-transition');
+        }, { passive: true });
+
+        container.addEventListener('touchmove', (e) => {
+            const currentX = e.changedTouches[0].screenX;
+            const currentY = e.changedTouches[0].screenY;
+            const diffX = currentX - touchStartX;
+            const diffY = currentY - touchStartY;
+            
+            // Determina la direzione prevalente
+            if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 10) {
+                // Swipe orizzontale
+                isSwiping = true;
+                currentTranslate = diffX;
+                
+                // Calcola la percentuale di movimento (max ±1)
+                const percentage = Math.max(-1, Math.min(1, diffX / window.innerWidth));
+                
+                // Calcola scala e opacità per effetto profondità
+                const currentScale = 1 - Math.abs(percentage) * 0.1;
+                const currentOpacity = 1 - Math.abs(percentage) * 0.5;
+                
+                const sideScale = 0.9 + Math.abs(percentage) * 0.1;
+                const sideOpacity = 0.5 + Math.abs(percentage) * 0.5;
+                
+                // Muovi la view corrente
+                currentDayEl.style.transform = `translateX(${percentage * 105}%) scale(${currentScale})`;
+                currentDayEl.style.opacity = currentOpacity;
+                currentDayEl.style.zIndex = 10;
+                
+                // Muovi la view successiva (a destra)
+                if (percentage < 0) {
+                    const nextPercentage = 105 + (percentage * 105);
+                    nextDayEl.style.transform = `translateX(${nextPercentage}%) scale(${sideScale})`;
+                    nextDayEl.style.opacity = sideOpacity;
+                    nextDayEl.style.zIndex = 5;
+                    
+                    prevDayEl.style.transform = `translateX(-105%) scale(0.9)`;
+                    prevDayEl.style.opacity = 0.5;
+                    prevDayEl.style.zIndex = 1;
+                } else {
+                    // Muovi la view precedente (a sinistra)
+                    const prevPercentage = -105 + (percentage * 105);
+                    prevDayEl.style.transform = `translateX(${prevPercentage}%) scale(${sideScale})`;
+                    prevDayEl.style.opacity = sideOpacity;
+                    prevDayEl.style.zIndex = 5;
+                    
+                    nextDayEl.style.transform = `translateX(105%) scale(0.9)`;
+                    nextDayEl.style.opacity = 0.5;
+                    nextDayEl.style.zIndex = 1;
+                }
+                
+                // Previeni scroll della pagina durante swipe orizzontale
+                e.preventDefault();
+            }
+        }, { passive: false });
+
+        container.addEventListener('touchend', (e) => {
+            if (!isSwiping) {
+                return;
+            }
+            
+            touchEndX = e.changedTouches[0].screenX;
+            
+            // Riabilita transizioni
+            currentDayEl.classList.remove('no-transition');
+            nextDayEl.classList.remove('no-transition');
+            prevDayEl.classList.remove('no-transition');
+            
+            handleSwipe();
+            
+            // Reset posizioni, scale e opacità
+            currentDayEl.style.transform = '';
+            currentDayEl.style.opacity = '';
+            currentDayEl.style.zIndex = '';
+            nextDayEl.style.transform = '';
+            nextDayEl.style.opacity = '';
+            nextDayEl.style.zIndex = '';
+            prevDayEl.style.transform = '';
+            prevDayEl.style.opacity = '';
+            prevDayEl.style.zIndex = '';
+            isSwiping = false;
+        });
+
+        function handleSwipe() {
+            const swipeThreshold = 50;
+            const diff = touchStartX - touchEndX;
+            
+            if (Math.abs(diff) > swipeThreshold) {
+                if (diff > 0) {
+                    // Swipe left - giorno successivo
+                    changeDay(1);
+                } else {
+                    // Swipe right - giorno precedente
+                    changeDay(-1);
+                }
+            }
+        }
+
+        // Click su modale per chiudere
+        document.getElementById('eventModal').addEventListener('click', (e) => {
+            if (e.target.id === 'eventModal') {
+                closeModal();
+            }
+        });
+
+        // Initialize
+        updateDisplay();
+
+        // Nasconde prompt installazione dopo 10 secondi
+        setTimeout(() => {
+            document.getElementById('installPrompt').classList.remove('show');
+        }, 10000);
+    </script>
+</body>
+</html>
