@@ -27,27 +27,91 @@
         .header {
             background: linear-gradient(135deg, #2196F3 0%, #1976D2 100%);
             color: white;
-            padding: 20px 16px;
+            padding: 12px 16px 8px 16px;
             text-align: center;
             box-shadow: 0 4px 12px rgba(0,0,0,0.15);
             position: relative;
             z-index: 10;
         }
 
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .today-btn {
+            background: rgba(255,255,255,0.2);
+            border: 1px solid rgba(255,255,255,0.3);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .today-btn:active {
+            background: rgba(255,255,255,0.3);
+        }
+
         .date-display {
-            font-size: 20px;
+            font-size: 18px;
             font-weight: bold;
+            flex: 1;
         }
 
         .day-indicator {
-            font-size: 14px;
+            font-size: 11px;
             opacity: 0.9;
-            margin-top: 4px;
+        }
+
+        .days-scroll {
+            display: flex;
+            overflow-x: auto;
+            gap: 4px;
+            padding: 8px 0;
+            margin: 0 -16px;
+            padding-left: 16px;
+            padding-right: 16px;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+        }
+
+        .days-scroll::-webkit-scrollbar {
+            display: none;
+        }
+
+        .day-chip {
+            flex-shrink: 0;
+            background: rgba(255,255,255,0.2);
+            border: 1px solid rgba(255,255,255,0.3);
+            color: white;
+            padding: 6px 10px;
+            border-radius: 16px;
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+            min-width: 60px;
+        }
+
+        .day-chip.active {
+            background: white;
+            color: #2196F3;
+            border-color: white;
+        }
+
+        .day-chip:active {
+            transform: scale(0.95);
         }
 
         .container {
             position: relative;
-            height: calc(100vh - 80px);
+            height: calc(100vh - 120px);
             overflow: hidden;
             perspective: 1000px;
         }
@@ -67,7 +131,7 @@
             margin-top: 20px;
             display: flex;
             flex-direction: column;
-            padding: 2px 0;
+            padding: 0.5px 0;
         }
 
         .day-view.no-transition {
@@ -92,30 +156,30 @@
 
         .swipe-indicator {
             position: fixed;
-            bottom: 10px;
+            bottom: 8px;
             left: 50%;
             transform: translateX(-50%);
             display: flex;
-            gap: 8px;
+            gap: 6px;
             z-index: 1000;
             pointer-events: none;
             background: rgba(255,255,255,0.95);
-            padding: 6px 14px;
-            border-radius: 20px;
+            padding: 4px 10px;
+            border-radius: 16px;
             box-shadow: 0 2px 12px rgba(0,0,0,0.2);
         }
 
         .swipe-dot {
-            width: 8px;
-            height: 8px;
+            width: 6px;
+            height: 6px;
             border-radius: 50%;
             background: rgba(33, 150, 243, 0.3);
             transition: all 0.3s;
         }
 
         .swipe-dot.active {
-            width: 24px;
-            border-radius: 4px;
+            width: 20px;
+            border-radius: 3px;
             background: #2196F3;
         }
 
@@ -123,10 +187,10 @@
 
         .hour-slot {
             background: white;
-            margin: 0.5px 6px;
-            padding: 3px 6px;
-            border-radius: 4px;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.08);
+            margin: 0px 4px 0.5px 4px;
+            padding: 1px 4px;
+            border-radius: 2px;
+            box-shadow: 0 1px 1px rgba(0,0,0,0.06);
             display: flex;
             align-items: center;
             flex: 1;
@@ -135,6 +199,7 @@
             transition: transform 0.1s;
             touch-action: manipulation;
             position: relative;
+            line-height: 1.1;
         }
 
         .hour-slot:active {
@@ -143,33 +208,35 @@
 
         .hour-time {
             font-weight: bold;
-            font-size: 14px;
+            font-size: 13px;
             color: #2196F3;
-            min-width: 50px;
+            min-width: 45px;
         }
 
         .event-content {
             flex: 1;
-            margin-left: 8px;
+            margin-left: 6px;
             overflow: hidden;
         }
 
         .event-title {
             font-weight: 600;
-            font-size: 14px;
-            margin-bottom: 1px;
+            font-size: 13px;
+            margin-bottom: 0px;
             color: #333;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+            line-height: 1.1;
         }
 
         .event-description {
-            font-size: 11px;
+            font-size: 10px;
             color: #666;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+            line-height: 1.1;
         }
 
         .share-btn {
@@ -177,10 +244,11 @@
             border: none;
             font-size: 18px;
             cursor: pointer;
-            padding: 2px 6px;
+            padding: 0px 4px;
             opacity: 0.6;
             transition: all 0.2s;
             flex-shrink: 0;
+            line-height: 1;
         }
 
         .share-btn:active {
@@ -370,8 +438,12 @@
 </head>
 <body>
     <div class="header">
-        <div class="date-display" id="dateDisplay">Caricamento...</div>
-        <div class="day-indicator">← Scorri per cambiare giorno →</div>
+        <div class="header-top">
+            <button class="today-btn" onclick="goToToday()">📅 Oggi</button>
+            <div class="date-display" id="dateDisplay">Caricamento...</div>
+            <div style="width: 60px;"></div>
+        </div>
+        <div class="days-scroll" id="daysScroll"></div>
     </div>
 
     <div class="container" id="container">
@@ -613,6 +685,55 @@
             const prevDate = new Date(currentDate);
             prevDate.setDate(prevDate.getDate() - 1);
             renderDay(prevDate, prevDayEl);
+            
+            // Aggiorna scrolling giorni
+            renderDaysScroll();
+        }
+
+        function renderDaysScroll() {
+            const scrollContainer = document.getElementById('daysScroll');
+            let html = '';
+            
+            // Mostra 15 giorni (7 prima, oggi, 7 dopo)
+            for (let i = -7; i <= 7; i++) {
+                const date = new Date(currentDate);
+                date.setDate(date.getDate() + i);
+                
+                const dayName = date.toLocaleDateString('it-IT', { weekday: 'short' });
+                const dayNum = date.getDate();
+                const monthName = date.toLocaleDateString('it-IT', { month: 'short' });
+                const isToday = i === 0;
+                
+                html += `
+                    <div class="day-chip ${isToday ? 'active' : ''}" onclick="jumpToDay(${i})">
+                        <div style="font-size: 9px; opacity: 0.8;">${dayName}</div>
+                        <div style="font-weight: 700;">${dayNum}</div>
+                        <div style="font-size: 9px; opacity: 0.8;">${monthName}</div>
+                    </div>
+                `;
+            }
+            
+            scrollContainer.innerHTML = html;
+            
+            // Scrolla al centro (giorno corrente)
+            setTimeout(() => {
+                const activeChip = scrollContainer.querySelector('.day-chip.active');
+                if (activeChip) {
+                    activeChip.scrollIntoView({ inline: 'center', behavior: 'smooth' });
+                }
+            }, 100);
+        }
+
+        function jumpToDay(offset) {
+            const targetDate = new Date(currentDate);
+            targetDate.setDate(targetDate.getDate() + offset);
+            currentDate = targetDate;
+            updateDisplay();
+        }
+
+        function goToToday() {
+            currentDate = new Date();
+            updateDisplay();
         }
 
         function changeDay(offset) {
