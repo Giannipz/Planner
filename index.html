@@ -6,8 +6,8 @@
     <meta name="theme-color" content="#2196F3">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <link rel="manifest" href="data:application/json;base64,ewogICJuYW1lIjogIk9yZ2FuaXp6YXRvcmUgU2V0dGltYW5hbGUiLAogICJzaG9ydF9uYW1lIjogIlBsYW5uZXIiLAogICJzdGFydF91cmwiOiAiLiIsCiAgImRpc3BsYXkiOiAic3RhbmRhbG9uZSIsCiAgImJhY2tncm91bmRfY29sb3IiOiAiIzIxOTZGMyIsCiAgInRoZW1lX2NvbG9yIjogIiMyMTk2RjMiLAogICJpY29ucyI6IFsKICAgIHsKICAgICAgInNyYyI6ICJkYXRhOmltYWdlL3N2Zyt4bWwsJTNDc3ZnIHhtbG5zPSdodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2Zycgd2lkdGg9JzE5MicgaGVpZ2h0PScxOTInJTNFJTNDcmVjdCB3aWR0aD0nMTkyJyBoZWlnaHQ9JzE5MicgZmlsbD0nJTIzMjE5NkYzJy8lM0UlM0N0ZXh0IHg9Jzk2JyB5PScxMjAnIGZvbnQtc2l6ZT0nODAnIHRleHQtYW5jaG9yPSdtaWRkbGUnIGZpbGw9J3doaXRlJyBmb250LWZhbWlseT0nc2Fucy1zZXJpZiclM0UlRjAlOUYlOTMlODUlM0MvdGV4dCUzRSUzQy9zdmclM0UiLAogICAgICAic2l6ZXMiOiAiMTkyeDE5MiIsCiAgICAgICJ0eXBlIjogImltYWdlL3N2Zyt4bWwiCiAgICB9LAogICAgewogICAgICAic3JjIjogImRhdGE6aW1hZ2Uvc3ZnK3htbCwlM0NzdmcgeG1sbnM9J2h0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnJyB3aWR0aD0nNTEyJyBoZWlnaHQ9JzUxMiclM0UlM0NyZWN0IHdpZHRoPSc1MTInIGhlaWdodD0nNTEyJyBmaWxsPSclMjMyMTk2RjMnLyUzRSUzQ3RleHQgeD0nMjU2JyB5PSczMjAnIGZvbnQtc2l6ZT0nMjAwJyB0ZXh0LWFuY2hvcj0nbWlkZGxlJyBmaWxsPSd3aGl0ZScgZm9udC1mYW1pbHk9J3NhbnMtc2VyaWYnJTNFJUYwJTlGJTkzJTg1JTNDL3RleHQlM0UlM0Mvc3ZnJTNFIiwKICAgICAgInNpemVzIjogIjUxMng1MTIiLAogICAgICAidHlwZSI6ICJpbWFnZS9zdmcreG1sIgogICAgfQogIF0KfQ==">
     <title>Organizzatore Settimanale</title>
+    <link rel="manifest" href="data:application/json;base64,ewogICJuYW1lIjogIk9yZ2FuaXp6YXRvcmUgU2V0dGltYW5hbGUiLAogICJzaG9ydF9uYW1lIjogIk9yZ2FuaXp6YXRvcmUiLAogICJzdGFydF91cmwiOiAiLiIsCiAgImRpc3BsYXkiOiAic3RhbmRhbG9uZSIsCiAgImJhY2tncm91bmRfY29sb3IiOiAiI2ZmZmZmZiIsCiAgInRoZW1lX2NvbG9yIjogIiMyMTk2RjMiLAogICJpY29ucyI6IFsKICAgIHsKICAgICAgInNyYyI6ICJkYXRhOmltYWdlL3N2Zyt4bWwsJTNDc3ZnIHhtbG5zPSdodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2Zycgd2lkdGg9JzE5MicgaGVpZ2h0PScxOTInJTNFJTNDcmVjdCB3aWR0aD0nMTkyJyBoZWlnaHQ9JzE5MicgZmlsbD0nJTIzMjE5NkYzJy8lM0UlM0N0ZXh0IHg9Jzk2JyB5PScxMjAnIGZvbnQtc2l6ZT0nODAnIHRleHQtYW5jaG9yPSdtaWRkbGUnIGZpbGw9J3doaXRlJyBmb250LWZhbWlseT0nc2Fucy1zZXJpZiclM0UlRjAlOUYlOTMlODUlM0MvdGV4dCUzRSUzQy9zdmclM0UiLAogICAgICAic2l6ZXMiOiAiMTkyeDE5MiIsCiAgICAgICJ0eXBlIjogImltYWdlL3N2Zyt4bWwiCiAgICB9CiAgXQp9">
     <style>
         * {
             margin: 0;
@@ -22,67 +22,14 @@
             overflow: hidden;
             touch-action: pan-y;
             height: 100vh;
-            padding-top: env(safe-area-inset-top);
-        }
-
-        .login-screen {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            padding: 20px;
-        }
-
-        .login-box {
-            background: white;
-            border-radius: 16px;
-            padding: 40px;
-            max-width: 400px;
-            width: 100%;
-            text-align: center;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.2);
-        }
-
-        .login-title {
-            font-size: 28px;
-            font-weight: bold;
-            color: #2196F3;
-            margin-bottom: 12px;
-        }
-
-        .login-subtitle {
-            color: #666;
-            margin-bottom: 32px;
-        }
-
-        .google-btn {
-            background: white;
-            border: 2px solid #ddd;
-            padding: 12px 24px;
-            border-radius: 8px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-            transition: all 0.2s;
-            width: 100%;
-        }
-
-        .google-btn:hover {
-            border-color: #2196F3;
-            background: #f5f5f5;
         }
 
         .header {
             background: linear-gradient(135deg, #2196F3 0%, #1976D2 100%);
             color: white;
-            padding: 4px 10px 4px 10px;
+            padding: 12px 16px 8px 16px;
             text-align: center;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
             position: relative;
             z-index: 10;
         }
@@ -91,30 +38,24 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 3px;
-            gap: 6px;
-            position: relative;
-            min-height: 36px;
+            margin-bottom: 6px;
+            gap: 8px;
         }
 
         .today-btn {
-            background: rgba(255,255,255,0.3);
-            border: 1.5px solid rgba(255,255,255,0.5);
+            background: rgba(255,255,255,0.2);
+            border: 1px solid rgba(255,255,255,0.3);
             color: white;
-            padding: 8px 14px;
-            border-radius: 14px;
-            font-size: 13px;
-            font-weight: 700;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
             cursor: pointer;
             transition: all 0.2s;
-            flex-shrink: 0;
-            white-space: nowrap;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
         .today-btn:active {
-            background: rgba(255,255,255,0.5);
-            transform: scale(0.95);
+            background: rgba(255,255,255,0.3);
         }
 
         .date-display {
@@ -126,55 +67,9 @@
             text-align: center;
         }
 
-        .user-menu {
-            position: relative;
-            flex-shrink: 0;
-        }
-
-        .user-avatar {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            cursor: pointer;
-            border: 2px solid rgba(255,255,255,0.5);
-        }
-
-        .user-dropdown {
-            display: none;
-            position: absolute;
-            top: 40px;
-            right: 0;
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-            min-width: 180px;
-            z-index: 1000;
-        }
-
-        .user-dropdown.show {
-            display: block;
-        }
-
-        .user-dropdown-item {
-            padding: 12px 16px;
-            color: #333;
-            cursor: pointer;
-            border-bottom: 1px solid #f0f0f0;
-        }
-
-        .user-dropdown-item:last-child {
-            border-bottom: none;
-            color: #f44336;
-        }
-
-        .user-dropdown-item:hover {
-            background: #f5f5f5;
-        }
-
-        .sync-status {
-            font-size: 10px;
-            opacity: 0.8;
-            margin-top: 2px;
+        .day-indicator {
+            font-size: 11px;
+            opacity: 0.9;
         }
 
         .days-scroll {
@@ -220,28 +115,27 @@
 
         .container {
             position: relative;
-            height: calc(100vh - 110px - env(safe-area-inset-top));
+            height: calc(100vh - 120px);
             overflow: hidden;
             perspective: 1000px;
-            margin-top: 8px;
         }
 
         .day-view {
             position: absolute;
             width: 90%;
             left: 5%;
-            height: calc(100% - 20px);
-            overflow-y: auto;
+            height: calc(100% - 40px);
+            overflow-y: hidden;
             -webkit-overflow-scrolling: touch;
             transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
             will-change: transform, opacity;
             border-radius: 12px;
             box-shadow: 0 4px 20px rgba(0,0,0,0.1);
             background: #f5f5f5;
-            margin-top: 10px;
+            margin-top: 20px;
             display: flex;
             flex-direction: column;
-            padding: 0px;
+            padding: 0.5px 0;
         }
 
         .day-view.no-transition {
@@ -264,23 +158,52 @@
             opacity: 0.5;
         }
 
+        .swipe-indicator {
+            position: fixed;
+            bottom: 8px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 6px;
+            z-index: 1000;
+            pointer-events: none;
+            background: rgba(255,255,255,0.95);
+            padding: 4px 10px;
+            border-radius: 16px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.2);
+        }
+
+        .swipe-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: rgba(33, 150, 243, 0.3);
+            transition: all 0.3s;
+        }
+
+        .swipe-dot.active {
+            width: 20px;
+            border-radius: 3px;
+            background: #2196F3;
+        }
+
+
+
         .hour-slot {
             background: white;
-            margin: 0px 2px;
-            padding: 0px 2px;
-            border-radius: 0px;
-            box-shadow: none;
-            border-bottom: 0.5px solid #f0f0f0;
+            margin: 0px 4px 0.5px 4px;
+            padding: 1px 4px;
+            border-radius: 2px;
+            box-shadow: 0 1px 1px rgba(0,0,0,0.06);
             display: flex;
             align-items: center;
             flex: 1;
             min-height: 0;
-            max-height: 28px;
             cursor: pointer;
             transition: transform 0.1s;
             touch-action: manipulation;
             position: relative;
-            line-height: 1;
+            line-height: 1.1;
         }
 
         .hour-slot:active {
@@ -288,56 +211,44 @@
         }
 
         .hour-time {
-            font-weight: 700;
-            font-size: 11px;
+            font-weight: bold;
+            font-size: 13px;
             color: #2196F3;
-            min-width: 38px;
-            padding: 0px;
-            line-height: 1;
+            min-width: 45px;
         }
 
         .event-content {
             flex: 1;
-            margin-left: 3px;
+            margin-left: 6px;
             overflow: hidden;
-            padding: 0px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
         }
 
         .event-title {
             font-weight: 600;
-            font-size: 11px;
+            font-size: 13px;
             margin-bottom: 0px;
             color: #333;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
-            line-height: 1;
+            line-height: 1.1;
         }
 
         .event-description {
-            font-size: 8px;
+            font-size: 10px;
             color: #666;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
-            line-height: 1;
-            margin-top: 1px;
-        }
-
-        .hour-slot.has-event {
-            background: linear-gradient(135deg, #E3F2FD 0%, #BBDEFB 100%);
-            border-left: 2px solid #2196F3;
+            line-height: 1.1;
         }
 
         .share-btn {
             background: none;
             border: none;
-            font-size: 13px;
+            font-size: 18px;
             cursor: pointer;
-            padding: 0px 1px;
+            padding: 0px 4px;
             opacity: 0.6;
             transition: all 0.2s;
             flex-shrink: 0;
@@ -346,13 +257,16 @@
 
         .share-btn:active {
             opacity: 1;
-            transform: scale(1.15);
+            transform: scale(1.2);
         }
 
-        .empty-state {
-            color: #999;
-            font-size: 9px;
-            line-height: 1;
+        .share-btn:hover {
+            opacity: 1;
+        }
+
+        .hour-slot.has-event {
+            background: linear-gradient(135deg, #E3F2FD 0%, #BBDEFB 100%);
+            border-left: 4px solid #2196F3;
         }
 
         .modal {
@@ -385,8 +299,6 @@
             width: 90%;
             max-width: 400px;
             animation: slideUp 0.3s;
-            max-height: 90vh;
-            overflow-y: auto;
         }
 
         @keyframes slideUp {
@@ -473,10 +385,6 @@
             color: white;
         }
 
-        .btn-danger:active {
-            background: #d32f2f;
-        }
-
         .btn-calendar {
             background: #34A853;
             color: white;
@@ -488,83 +396,70 @@
             background: #2D8E47;
         }
 
-        .swipe-indicator {
+        .install-prompt {
             position: fixed;
-            bottom: 8px;
+            bottom: 20px;
             left: 50%;
             transform: translateX(-50%);
+            background: #333;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 24px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            display: none;
+            align-items: center;
+            gap: 12px;
+            z-index: 2000;
+        }
+
+        .install-prompt.show {
             display: flex;
-            gap: 6px;
-            z-index: 1000;
-            pointer-events: none;
-            background: rgba(255,255,255,0.95);
-            padding: 4px 10px;
+        }
+
+        .install-btn {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 8px 16px;
             border-radius: 16px;
-            box-shadow: 0 2px 12px rgba(0,0,0,0.2);
+            font-weight: bold;
+            cursor: pointer;
         }
 
-        .swipe-dot {
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-            background: rgba(33, 150, 243, 0.3);
-            transition: all 0.3s;
+        .empty-state {
+            color: #999;
+            font-size: 12px;
         }
 
-        .swipe-dot.active {
-            width: 20px;
-            border-radius: 3px;
-            background: #2196F3;
-        }
-
-        @media (min-width: 768px) {
-            .container {
-                max-width: 600px;
-                margin: 0 auto;
-            }
+        .swipe-hint {
+            text-align: center;
+            color: #999;
+            font-size: 12px;
+            padding: 8px;
+            opacity: 0.7;
         }
     </style>
 </head>
 <body>
-    <div id="loginScreen" class="login-screen">
-        <div class="login-box">
-            <div class="login-title">📅 Organizzatore</div>
-            <div class="login-subtitle">Sincronizza i tuoi eventi su tutti i dispositivi</div>
-            <button class="google-btn" id="loginBtn">
-                <svg width="18" height="18" xmlns="http://www.w3.org/2000/svg"><g fill="none" fill-rule="evenodd"><path d="M17.6 9.2l-.1-1.8H9v3.4h4.8C13.6 12 13 13 12 13.6v2.2h3a8.8 8.8 0 0 0 2.6-6.6z" fill="#4285F4"/><path d="M9 18c2.4 0 4.5-.8 6-2.2l-3-2.2a5.4 5.4 0 0 1-8-2.9H1V13a9 9 0 0 0 8 5z" fill="#34A853"/><path d="M4 10.7a5.4 5.4 0 0 1 0-3.4V5H1a9 9 0 0 0 0 8l3-2.3z" fill="#FBBC05"/><path d="M9 3.6c1.3 0 2.5.4 3.4 1.3L15 2.3A9 9 0 0 0 1 5l3 2.4a5.4 5.4 0 0 1 5-3.7z" fill="#EA4335"/></g></svg>
-                Accedi con Google
-            </button>
+    <div class="header">
+        <div class="header-top">
+            <button class="today-btn" onclick="goToToday()">📅 Oggi</button>
+            <div class="date-display" id="dateDisplay">Caricamento...</div>
+            <div style="width: 60px;"></div>
         </div>
+        <div class="days-scroll" id="daysScroll"></div>
     </div>
 
-    <div id="appScreen" style="display:none;">
-        <div class="header">
-            <div class="header-top">
-                <button class="today-btn" id="todayBtn">📅 Oggi</button>
-                <div class="date-display" id="dateDisplay">Caricamento...</div>
-                <div class="user-menu">
-                    <img id="userAvatar" class="user-avatar" src="" alt="User">
-                    <div id="userDropdown" class="user-dropdown">
-                        <div class="user-dropdown-item" id="userName" style="font-weight:600;"></div>
-                        <div class="user-dropdown-item" id="logoutBtn">Esci</div>
-                    </div>
-                </div>
-            </div>
-            <div class="sync-status" id="syncStatus">● Sincronizzato</div>
-            <div class="days-scroll" id="daysScroll"></div>
-        </div>
+    <div class="container" id="container">
+        <div class="day-view center" id="currentDay"></div>
+        <div class="day-view right" id="nextDay"></div>
+        <div class="day-view left" id="prevDay"></div>
+    </div>
 
-        <div class="container" id="container">
-            <div class="day-view center" id="currentDay"></div>
-            <div class="day-view right" id="nextDay"></div>
-            <div class="day-view left" id="prevDay"></div>
-        </div>
-
-        <div class="swipe-indicator">
-            <div class="swipe-dot"></div>
-            <div class="swipe-dot active"></div>
-            <div class="swipe-dot"></div>
-        </div>
+    <div class="swipe-indicator">
+        <div class="swipe-dot"></div>
+        <div class="swipe-dot active"></div>
+        <div class="swipe-dot"></div>
     </div>
 
     <div class="modal" id="eventModal">
@@ -579,14 +474,14 @@
                 <textarea id="eventDescription" placeholder="Dettagli aggiuntivi..."></textarea>
             </div>
             <div class="modal-buttons">
-                <button class="btn btn-secondary" id="cancelBtn">Annulla</button>
-                <button class="btn btn-danger" id="deleteBtn" style="display:none;">Elimina</button>
-                <button class="btn btn-primary" id="saveBtn">Salva</button>
+                <button class="btn btn-secondary" onclick="closeModal()">Annulla</button>
+                <button class="btn btn-danger" id="deleteBtn" style="display:none;" onclick="deleteEvent()">Elimina</button>
+                <button class="btn btn-primary" onclick="saveEvent()">Salva</button>
             </div>
-            <button class="btn btn-calendar" id="calendarBtn" style="display:none;">
+            <button class="btn btn-calendar" id="calendarBtn" style="display:none;" onclick="addExistingToCalendar()">
                 📅 Aggiungi a Google Calendar
             </button>
-            <button class="btn btn-danger" id="stopRepeatBtn" style="display:none; margin-top: 8px;">
+            <button class="btn btn-danger" id="stopRepeatBtn" style="display:none; margin-top: 8px;" onclick="stopRepeat()">
                 🛑 Ferma Ripetizione
             </button>
             <div id="newEventCalendarOption" style="margin-top: 12px; text-align: center;">
@@ -602,183 +497,84 @@
         </div>
     </div>
 
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <div class="install-prompt" id="installPrompt">
+        <span>📱 Installa l'app sulla home screen!</span>
+        <button class="install-btn" onclick="installApp()">Installa</button>
+    </div>
 
     <script>
-        // Aspetta che Firebase sia caricato
-        function initApp() {
-            if (typeof firebase === 'undefined') {
-                console.log('Attendo caricamento Firebase...');
-                setTimeout(initApp, 100);
-                return;
-            }
-
-        // Firebase Config
-        const firebaseConfig = {
-            apiKey: "AIzaSyCy2OtSr108Kt4P0yODARUSUj8gRvXa0Ng",
-            authDomain: "syncplanner-49faf.firebaseapp.com",
-            projectId: "syncplanner-49faf",
-            storageBucket: "syncplanner-49faf.firebasestorage.app",
-            messagingSenderId: "380935845371",
-            appId: "1:380935845371:web:6bdbc97944bca4e6ca475e",
-            measurementId: "G-YJTRCFM59G"
-        };
-
-        // Initialize Firebase
-        firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();
-        const db = firebase.firestore();
-
-        let currentUser = null;
         let currentDate = new Date();
         let currentHour = null;
         let touchStartX = 0;
-        let touchStartY = 0;
         let touchEndX = 0;
         let isSwiping = false;
         let currentTranslate = 0;
+        let deferredPrompt;
 
         const container = document.getElementById('container');
         const currentDayEl = document.getElementById('currentDay');
         const nextDayEl = document.getElementById('nextDay');
         const prevDayEl = document.getElementById('prevDay');
 
-        // Auth State Observer
-        auth.onAuthStateChanged((user) => {
-            if (user) {
-                currentUser = user;
-                document.getElementById('loginScreen').style.display = 'none';
-                document.getElementById('appScreen').style.display = 'block';
-                document.getElementById('userAvatar').src = user.photoURL || '';
-                document.getElementById('userName').textContent = user.displayName || user.email;
-                initializeApp();
-            } else {
-                document.getElementById('loginScreen').style.display = 'flex';
-                document.getElementById('appScreen').style.display = 'none';
+        // Service Worker
+        if ('serviceWorker' in navigator) {
+            const swCode = `
+                self.addEventListener('install', (e) => {
+                    e.waitUntil(
+                        caches.open('week-planner-v1').then((cache) => {
+                            return cache.addAll(['/']);
+                        })
+                    );
+                });
+                
+                self.addEventListener('fetch', (e) => {
+                    e.respondWith(
+                        caches.match(e.request).then((response) => {
+                            return response || fetch(e.request);
+                        })
+                    );
+                });
+            `;
+            
+            const blob = new Blob([swCode], { type: 'application/javascript' });
+            const swUrl = URL.createObjectURL(blob);
+            navigator.serviceWorker.register(swUrl);
+        }
+
+        // PWA Install
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            document.getElementById('installPrompt').classList.add('show');
+        });
+
+        function installApp() {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                deferredPrompt.userChoice.then((choiceResult) => {
+                    deferredPrompt = null;
+                    document.getElementById('installPrompt').classList.remove('show');
+                });
             }
-        });
-
-        // Login
-        document.getElementById('loginBtn').addEventListener('click', async () => {
-            const provider = new firebase.auth.GoogleAuthProvider();
-            try {
-                await auth.signInWithPopup(provider);
-            } catch (error) {
-                console.error('Login error:', error);
-                alert('Errore nel login: ' + error.message);
-            }
-        });
-
-        // Logout
-        document.getElementById('logoutBtn').addEventListener('click', async () => {
-            if (confirm('Vuoi uscire?')) {
-                await auth.signOut();
-            }
-        });
-
-        // User Menu Toggle
-        document.getElementById('userAvatar').addEventListener('click', () => {
-            document.getElementById('userDropdown').classList.toggle('show');
-        });
-
-        document.addEventListener('click', (e) => {
-            if (!e.target.closest('.user-menu')) {
-                document.getElementById('userDropdown').classList.remove('show');
-            }
-        });
-
-        // Firestore Functions
-        async function getEventsFromFirestore(date) {
-            const dateStr = formatDate(date);
-            const userId = currentUser.uid;
-            
-            const snapshot = await db.collection('users').doc(userId).collection('events')
-                .where('date', '==', dateStr).get();
-            
-            const events = {};
-            snapshot.forEach(doc => {
-                const data = doc.data();
-                events[data.hour] = data;
-            });
-            
-            return events;
         }
 
-        async function getRecurringEventsFromFirestore() {
-            const userId = currentUser.uid;
-            const snapshot = await db.collection('users').doc(userId).collection('recurring').get();
+        // Storage
+        function getEvents(date) {
+            const key = formatDate(date);
+            const stored = localStorage.getItem(key);
+            const dayEvents = stored ? JSON.parse(stored) : {};
             
-            const recurring = {};
-            snapshot.forEach(doc => {
-                recurring[doc.id] = doc.data();
-            });
-            
-            return recurring;
-        }
-
-        async function saveEventToFirestore(date, hour, title, description) {
-            const userId = currentUser.uid;
-            const dateStr = formatDate(date);
-            const eventId = `${dateStr}_${hour}`;
-            
-            await db.collection('users').doc(userId).collection('events').doc(eventId).set({
-                date: dateStr,
-                hour: hour,
-                title: title,
-                description: description,
-                updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-            });
-            
-            updateSyncStatus('● Sincronizzato');
-        }
-
-        async function saveRecurringEventToFirestore(hour, title, description, startDate) {
-            const userId = currentUser.uid;
-            const recurringId = `${hour}_${Date.now()}`;
-            
-            await db.collection('users').doc(userId).collection('recurring').doc(recurringId).set({
-                hour: hour,
-                title: title,
-                description: description,
-                startDate: startDate,
-                createdAt: firebase.firestore.FieldValue.serverTimestamp()
-            });
-            
-            updateSyncStatus('● Sincronizzato');
-        }
-
-        async function deleteEventFromFirestore(date, hour) {
-            const userId = currentUser.uid;
-            const dateStr = formatDate(date);
-            const eventId = `${dateStr}_${hour}`;
-            
-            await db.collection('users').doc(userId).collection('events').doc(eventId).delete();
-            updateSyncStatus('● Sincronizzato');
-        }
-
-        async function removeRecurringEventFromFirestore(recurringId) {
-            const userId = currentUser.uid;
-            await db.collection('users').doc(userId).collection('recurring').doc(recurringId).delete();
-            updateSyncStatus('● Sincronizzato');
-        }
-
-        function updateSyncStatus(text) {
-            document.getElementById('syncStatus').textContent = text;
-        }
-
-        async function getEvents(date) {
-            const dayEvents = await getEventsFromFirestore(date);
-            const recurringEvents = await getRecurringEventsFromFirestore();
-            
+            // Aggiungi eventi ricorrenti
+            const recurringEvents = getRecurringEvents();
             for (let recurringKey in recurringEvents) {
                 const recurring = recurringEvents[recurringKey];
                 const recurringDate = new Date(recurring.startDate);
                 const checkDate = new Date(date);
                 
+                // Mostra solo se la data corrente è >= data di inizio
                 if (checkDate >= recurringDate) {
                     const hour = recurring.hour;
+                    // Non sovrascrivere se c'è già un evento specifico per quel giorno
                     if (!dayEvents[hour]) {
                         dayEvents[hour] = {
                             title: recurring.title,
@@ -793,6 +589,47 @@
             return dayEvents;
         }
 
+        function getRecurringEvents() {
+            const stored = localStorage.getItem('recurring_events');
+            return stored ? JSON.parse(stored) : {};
+        }
+
+        function saveRecurringEvent(hour, title, description, startDate) {
+            const recurring = getRecurringEvents();
+            const id = `${hour}_${Date.now()}`;
+            recurring[id] = {
+                hour: hour,
+                title: title,
+                description: description,
+                startDate: startDate
+            };
+            localStorage.setItem('recurring_events', JSON.stringify(recurring));
+        }
+
+        function removeRecurringEvent(recurringId) {
+            const recurring = getRecurringEvents();
+            delete recurring[recurringId];
+            localStorage.setItem('recurring_events', JSON.stringify(recurring));
+        }
+
+        function saveEventToStorage(date, hour, title, description) {
+            const key = formatDate(date);
+            const events = {};
+            const stored = localStorage.getItem(key);
+            if (stored) {
+                Object.assign(events, JSON.parse(stored));
+            }
+            events[hour] = { title, description };
+            localStorage.setItem(key, JSON.stringify(events));
+        }
+
+        function deleteEventFromStorage(date, hour) {
+            const key = formatDate(date);
+            const events = getEvents(date);
+            delete events[hour];
+            localStorage.setItem(key, JSON.stringify(events));
+        }
+
         function formatDate(date) {
             return date.toISOString().split('T')[0];
         }
@@ -802,17 +639,15 @@
             return date.toLocaleDateString('it-IT', options);
         }
 
-        async function renderDay(date, container) {
-            const events = await getEvents(date);
+        function renderDay(date, container) {
+            const events = getEvents(date);
             let html = '';
             
+            // Solo ore dalle 7:00 alle 21:00
             for (let hour = 7; hour <= 21; hour++) {
                 const event = events[hour];
                 const hasEvent = event && event.title;
                 const timeStr = `${hour.toString().padStart(2, '0')}:00`;
-                
-                const eventTitle = hasEvent ? event.title.replace(/'/g, '&#39;').replace(/"/g, '&quot;') : '';
-                const eventDesc = hasEvent && event.description ? event.description.replace(/'/g, '&#39;').replace(/"/g, '&quot;') : '';
                 
                 html += `
                     <div class="hour-slot ${hasEvent ? 'has-event' : ''}" onclick="openModal(${hour})">
@@ -820,15 +655,15 @@
                         <div class="event-content">
                             ${hasEvent ? `
                                 <div class="event-title">
-                                    ${event.isRecurring ? '🔁 ' : ''}${eventTitle}
+                                    ${event.isRecurring ? '🔁 ' : ''}${event.title}
                                 </div>
-                                ${event.description ? `<div class="event-description">${eventDesc}</div>` : ''}
+                                ${event.description ? `<div class="event-description">${event.description}</div>` : ''}
                             ` : `
                                 <div class="empty-state">Nessun evento</div>
                             `}
                         </div>
                         ${hasEvent ? `
-                            <button class="share-btn" onclick="event.stopPropagation(); shareEvent('${formatDate(date)}', ${hour}, '${eventTitle}', '${eventDesc}')">
+                            <button class="share-btn" onclick="shareEvent(event, '${date}', ${hour}, '${event.title.replace(/'/g, "\\'")}', '${event.description ? event.description.replace(/'/g, "\\'") : ''}')">
                                 📤
                             </button>
                         ` : ''}
@@ -839,19 +674,23 @@
             container.innerHTML = html;
         }
 
-        async function updateDisplay() {
+        function updateDisplay() {
             document.getElementById('dateDisplay').textContent = formatDateDisplay(currentDate);
             
-            await renderDay(currentDate, currentDayEl);
+            // Renderizza giorno corrente
+            renderDay(currentDate, currentDayEl);
             
+            // Renderizza giorno successivo
             const nextDate = new Date(currentDate);
             nextDate.setDate(nextDate.getDate() + 1);
-            await renderDay(nextDate, nextDayEl);
+            renderDay(nextDate, nextDayEl);
             
+            // Renderizza giorno precedente
             const prevDate = new Date(currentDate);
             prevDate.setDate(prevDate.getDate() - 1);
-            await renderDay(prevDate, prevDayEl);
+            renderDay(prevDate, prevDayEl);
             
+            // Aggiorna scrolling giorni
             renderDaysScroll();
         }
 
@@ -862,6 +701,7 @@
             const today = new Date();
             today.setHours(0, 0, 0, 0);
             
+            // Mostra 30 giorni successivi (oggi + 29 giorni dopo)
             for (let i = 0; i < 30; i++) {
                 const date = new Date(today);
                 date.setDate(date.getDate() + i);
@@ -885,6 +725,7 @@
             
             scrollContainer.innerHTML = html;
             
+            // Scrolla al giorno attivo
             setTimeout(() => {
                 const activeChip = scrollContainer.querySelector('.day-chip.active');
                 if (activeChip) {
@@ -898,10 +739,17 @@
             updateDisplay();
         }
 
-        document.getElementById('todayBtn').addEventListener('click', () => {
+        function jumpToDay(offset) {
+            const targetDate = new Date(currentDate);
+            targetDate.setDate(targetDate.getDate() + offset);
+            currentDate = targetDate;
+            updateDisplay();
+        }
+
+        function goToToday() {
             currentDate = new Date();
             updateDisplay();
-        });
+        }
 
         function changeDay(offset) {
             const newDate = new Date(currentDate);
@@ -910,28 +758,16 @@
             updateDisplay();
         }
 
-        async function openModal(hour) {
+        function openModal(hour) {
             currentHour = hour;
-            const events = await getEvents(currentDate);
-            const existingEvent = events[hour];
+            const events = getEvents(currentDate);
+            const event = events[hour];
             
             document.getElementById('modalTitle').textContent = 
-                existingEvent ? 'Modifica Evento' : 'Aggiungi Evento';
-            document.getElementById('eventTitle').value = existingEvent ? existingEvent.title : '';
-            document.getElementById('eventDescription').value = existingEvent ? existingEvent.description || '' : '';
-            
-            document.getElementById('deleteBtn').style.display = existingEvent ? 'block' : 'none';
-            document.getElementById('calendarBtn').style.display = existingEvent ? 'block' : 'none';
-            document.getElementById('newEventCalendarOption').style.display = existingEvent ? 'none' : 'block';
-            
-            const stopRepeatBtn = document.getElementById('stopRepeatBtn');
-            if (existingEvent && existingEvent.isRecurring) {
-                stopRepeatBtn.style.display = 'block';
-                stopRepeatBtn.setAttribute('data-recurring-id', existingEvent.recurringId);
-            } else {
-                stopRepeatBtn.style.display = 'none';
-            }
-            
+                event ? 'Modifica Evento' : 'Aggiungi Evento';
+            document.getElementById('eventTitle').value = event ? event.title : '';
+            document.getElementById('eventDescription').value = event ? event.description : '';
+            document.getElementById('deleteBtn').style.display = event ? 'block' : 'none';
             document.getElementById('eventModal').classList.add('show');
         }
 
@@ -940,86 +776,45 @@
             currentHour = null;
         }
 
-        document.getElementById('cancelBtn').addEventListener('click', closeModal);
-
-        document.getElementById('saveBtn').addEventListener('click', async () => {
+        function saveEvent() {
             const title = document.getElementById('eventTitle').value.trim();
             if (!title) {
                 alert('Inserisci un titolo per l\'evento');
                 return;
             }
             
-            updateSyncStatus('⟳ Sincronizzazione...');
-            
             const description = document.getElementById('eventDescription').value.trim();
             const addToCalendar = document.getElementById('addToCalendar').checked;
-            const repeatDaily = document.getElementById('repeatDaily').checked;
+            const repeatDaily = document.getElementById('repeatDaily') && document.getElementById('repeatDaily').checked;
             
-            await saveEventToFirestore(currentDate, currentHour, title, description);
+            // Salva nel localStorage
+            saveEventToStorage(currentDate, currentHour, title, description);
             
+            // Se ripeti, salva come evento ricorrente
             if (repeatDaily) {
-                await saveRecurringEventToFirestore(currentHour, title, description, formatDate(currentDate));
+                saveRecurringEvent(currentHour, title, description, formatDate(currentDate));
             }
             
-            await updateDisplay();
+            updateDisplay();
             
+            // Aggiungi a Google Calendar se richiesto
             if (addToCalendar) {
                 openGoogleCalendar(title, description, currentDate, currentHour);
             }
             
             closeModal();
-        });
-
-        document.getElementById('deleteBtn').addEventListener('click', async () => {
-            const events = await getEvents(currentDate);
-            const event = events[currentHour];
-            
-            if (event && event.isRecurring) {
-                const deleteAll = confirm('Questo è un evento ripetuto.\n\nOK = Elimina TUTTA LA SERIE (tutti i giorni)\nAnnulla = Elimina SOLO OGGI');
-                
-                updateSyncStatus('⟳ Sincronizzazione...');
-                
-                if (deleteAll) {
-                    await removeRecurringEventFromFirestore(event.recurringId);
-                } else {
-                    await deleteEventFromFirestore(currentDate, currentHour);
-                }
-            } else {
-                if (confirm('Vuoi eliminare questo evento?')) {
-                    updateSyncStatus('⟳ Sincronizzazione...');
-                    await deleteEventFromFirestore(currentDate, currentHour);
-                }
-            }
-            
-            await updateDisplay();
-            closeModal();
-        });
-
-        document.getElementById('stopRepeatBtn').addEventListener('click', async () => {
-            const recurringId = document.getElementById('stopRepeatBtn').getAttribute('data-recurring-id');
-            if (recurringId && confirm('Vuoi fermare la ripetizione di questo evento per tutti i giorni futuri?')) {
-                updateSyncStatus('⟳ Sincronizzazione...');
-                await removeRecurringEventFromFirestore(recurringId);
-                await updateDisplay();
-                closeModal();
-            }
-        });
-
-        document.getElementById('calendarBtn').addEventListener('click', () => {
-            const title = document.getElementById('eventTitle').value.trim();
-            const description = document.getElementById('eventDescription').value.trim();
-            if (title) {
-                openGoogleCalendar(title, description, currentDate, currentHour);
-            }
-        });
+        }
 
         function openGoogleCalendar(title, description, date, hour) {
+            // Costruisci la data/ora di inizio
             const startDate = new Date(date);
             startDate.setHours(hour, 0, 0, 0);
             
+            // Data/ora di fine (1 ora dopo)
             const endDate = new Date(startDate);
             endDate.setHours(hour + 1, 0, 0, 0);
             
+            // Formatta le date per Google Calendar (formato: YYYYMMDDTHHmmSS)
             const formatGoogleDate = (d) => {
                 const year = d.getFullYear();
                 const month = String(d.getMonth() + 1).padStart(2, '0');
@@ -1029,6 +824,7 @@
                 return `${year}${month}${day}T${hours}${minutes}00`;
             };
             
+            // Costruisci l'URL di Google Calendar
             const params = new URLSearchParams({
                 action: 'TEMPLATE',
                 text: title,
@@ -1037,122 +833,131 @@
             });
             
             const calendarUrl = `https://calendar.google.com/calendar/render?${params.toString()}`;
+            
+            // Apri Google Calendar in una nuova finestra
             window.open(calendarUrl, '_blank');
         }
 
-        function shareEvent(date, hour, title, description) {
-            const eventDate = new Date(date);
-            const dateStr = eventDate.toLocaleDateString('it-IT', { 
-                weekday: 'long', 
-                year: 'numeric', 
-                month: 'long', 
-                day: 'numeric' 
-            });
-            const timeStr = `${hour.toString().padStart(2, '0')}:00`;
+        function deleteEvent() {
+            const events = getEvents(currentDate);
+            const event = events[currentHour];
             
-            const shareText = `📅 ${title}\n🕐 ${dateStr} alle ${timeStr}${description ? `\n📝 ${description}` : ''}`;
-            
-            if (navigator.share) {
-                navigator.share({
-                    title: title,
-                    text: shareText
-                }).catch(() => {});
+            // Se è un evento ricorrente, chiedi se vuole eliminare solo oggi o tutta la serie
+            if (event && event.isRecurring) {
+                const deleteAll = confirm('Questo è un evento ripetuto.\n\nOK = Elimina TUTTA LA SERIE (tutti i giorni)\nAnnulla = Elimina SOLO OGGI');
+                
+                if (deleteAll) {
+                    // Elimina tutta la serie
+                    removeRecurringEvent(event.recurringId);
+                } else {
+                    // Elimina solo per oggi
+                    deleteEventFromStorage(currentDate, currentHour);
+                }
             } else {
-                navigator.clipboard.writeText(shareText).then(() => {
-                    alert('📋 Evento copiato negli appunti!');
-                }).catch(() => {
-                    alert('Impossibile condividere l\'evento');
-                });
+                // Evento normale
+                if (confirm('Vuoi eliminare questo evento?')) {
+                    deleteEventFromStorage(currentDate, currentHour);
+                }
             }
-        }
-
-        function initializeApp() {
+            
             updateDisplay();
-            setupTouchEvents();
+            closeModal();
         }
 
-        function setupTouchEvents() {
-            container.addEventListener('touchstart', (e) => {
-                touchStartX = e.changedTouches[0].screenX;
-                touchStartY = e.changedTouches[0].screenY;
-                isSwiping = false;
-                
-                currentDayEl.classList.add('no-transition');
-                nextDayEl.classList.add('no-transition');
-                prevDayEl.classList.add('no-transition');
-            }, { passive: true });
+        // Touch events
+        let touchStartY = 0;
+        
+        container.addEventListener('touchstart', (e) => {
+            touchStartX = e.changedTouches[0].screenX;
+            touchStartY = e.changedTouches[0].screenY;
+            isSwiping = false;
+            
+            // Rimuovi transizioni per movimento fluido
+            currentDayEl.classList.add('no-transition');
+            nextDayEl.classList.add('no-transition');
+            prevDayEl.classList.add('no-transition');
+        }, { passive: true });
 
-            container.addEventListener('touchmove', (e) => {
-                const currentX = e.changedTouches[0].screenX;
-                const currentY = e.changedTouches[0].screenY;
-                const diffX = currentX - touchStartX;
-                const diffY = currentY - touchStartY;
+        container.addEventListener('touchmove', (e) => {
+            const currentX = e.changedTouches[0].screenX;
+            const currentY = e.changedTouches[0].screenY;
+            const diffX = currentX - touchStartX;
+            const diffY = currentY - touchStartY;
+            
+            // Determina la direzione prevalente
+            if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 10) {
+                // Swipe orizzontale
+                isSwiping = true;
+                currentTranslate = diffX;
                 
-                if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 10) {
-                    isSwiping = true;
-                    currentTranslate = diffX;
+                // Calcola la percentuale di movimento (max ±1)
+                const percentage = Math.max(-1, Math.min(1, diffX / window.innerWidth));
+                
+                // Calcola scala e opacità per effetto profondità
+                const currentScale = 1 - Math.abs(percentage) * 0.1;
+                const currentOpacity = 1 - Math.abs(percentage) * 0.5;
+                
+                const sideScale = 0.9 + Math.abs(percentage) * 0.1;
+                const sideOpacity = 0.5 + Math.abs(percentage) * 0.5;
+                
+                // Muovi la view corrente
+                currentDayEl.style.transform = `translateX(${percentage * 105}%) scale(${currentScale})`;
+                currentDayEl.style.opacity = currentOpacity;
+                currentDayEl.style.zIndex = 10;
+                
+                // Muovi la view successiva (a destra)
+                if (percentage < 0) {
+                    const nextPercentage = 105 + (percentage * 105);
+                    nextDayEl.style.transform = `translateX(${nextPercentage}%) scale(${sideScale})`;
+                    nextDayEl.style.opacity = sideOpacity;
+                    nextDayEl.style.zIndex = 5;
                     
-                    const percentage = Math.max(-1, Math.min(1, diffX / window.innerWidth));
+                    prevDayEl.style.transform = `translateX(-105%) scale(0.9)`;
+                    prevDayEl.style.opacity = 0.5;
+                    prevDayEl.style.zIndex = 1;
+                } else {
+                    // Muovi la view precedente (a sinistra)
+                    const prevPercentage = -105 + (percentage * 105);
+                    prevDayEl.style.transform = `translateX(${prevPercentage}%) scale(${sideScale})`;
+                    prevDayEl.style.opacity = sideOpacity;
+                    prevDayEl.style.zIndex = 5;
                     
-                    const currentScale = 1 - Math.abs(percentage) * 0.1;
-                    const currentOpacity = 1 - Math.abs(percentage) * 0.5;
-                    
-                    const sideScale = 0.9 + Math.abs(percentage) * 0.1;
-                    const sideOpacity = 0.5 + Math.abs(percentage) * 0.5;
-                    
-                    currentDayEl.style.transform = `translateX(${percentage * 105}%) scale(${currentScale})`;
-                    currentDayEl.style.opacity = currentOpacity;
-                    currentDayEl.style.zIndex = 10;
-                    
-                    if (percentage < 0) {
-                        const nextPercentage = 105 + (percentage * 105);
-                        nextDayEl.style.transform = `translateX(${nextPercentage}%) scale(${sideScale})`;
-                        nextDayEl.style.opacity = sideOpacity;
-                        nextDayEl.style.zIndex = 5;
-                        
-                        prevDayEl.style.transform = `translateX(-105%) scale(0.9)`;
-                        prevDayEl.style.opacity = 0.5;
-                        prevDayEl.style.zIndex = 1;
-                    } else {
-                        const prevPercentage = -105 + (percentage * 105);
-                        prevDayEl.style.transform = `translateX(${prevPercentage}%) scale(${sideScale})`;
-                        prevDayEl.style.opacity = sideOpacity;
-                        prevDayEl.style.zIndex = 5;
-                        
-                        nextDayEl.style.transform = `translateX(105%) scale(0.9)`;
-                        nextDayEl.style.opacity = 0.5;
-                        nextDayEl.style.zIndex = 1;
-                    }
-                    
-                    e.preventDefault();
+                    nextDayEl.style.transform = `translateX(105%) scale(0.9)`;
+                    nextDayEl.style.opacity = 0.5;
+                    nextDayEl.style.zIndex = 1;
                 }
-            }, { passive: false });
+                
+                // Previeni scroll della pagina durante swipe orizzontale
+                e.preventDefault();
+            }
+        }, { passive: false });
 
-            container.addEventListener('touchend', (e) => {
-                if (!isSwiping) {
-                    return;
-                }
-                
-                touchEndX = e.changedTouches[0].screenX;
-                
-                currentDayEl.classList.remove('no-transition');
-                nextDayEl.classList.remove('no-transition');
-                prevDayEl.classList.remove('no-transition');
-                
-                handleSwipe();
-                
-                currentDayEl.style.transform = '';
-                currentDayEl.style.opacity = '';
-                currentDayEl.style.zIndex = '';
-                nextDayEl.style.transform = '';
-                nextDayEl.style.opacity = '';
-                nextDayEl.style.zIndex = '';
-                prevDayEl.style.transform = '';
-                prevDayEl.style.opacity = '';
-                prevDayEl.style.zIndex = '';
-                isSwiping = false;
-            });
-        }
+        container.addEventListener('touchend', (e) => {
+            if (!isSwiping) {
+                return;
+            }
+            
+            touchEndX = e.changedTouches[0].screenX;
+            
+            // Riabilita transizioni
+            currentDayEl.classList.remove('no-transition');
+            nextDayEl.classList.remove('no-transition');
+            prevDayEl.classList.remove('no-transition');
+            
+            handleSwipe();
+            
+            // Reset posizioni, scale e opacità
+            currentDayEl.style.transform = '';
+            currentDayEl.style.opacity = '';
+            currentDayEl.style.zIndex = '';
+            nextDayEl.style.transform = '';
+            nextDayEl.style.opacity = '';
+            nextDayEl.style.zIndex = '';
+            prevDayEl.style.transform = '';
+            prevDayEl.style.opacity = '';
+            prevDayEl.style.zIndex = '';
+            isSwiping = false;
+        });
 
         function handleSwipe() {
             const swipeThreshold = 50;
@@ -1160,54 +965,29 @@
             
             if (Math.abs(diff) > swipeThreshold) {
                 if (diff > 0) {
+                    // Swipe left - giorno successivo
                     changeDay(1);
                 } else {
+                    // Swipe right - giorno precedente
                     changeDay(-1);
                 }
             }
         }
 
+        // Click su modale per chiudere
         document.getElementById('eventModal').addEventListener('click', (e) => {
             if (e.target.id === 'eventModal') {
                 closeModal();
             }
         });
 
-        } // Fine initApp
+        // Initialize
+        updateDisplay();
 
-        // Avvia l'app quando il DOM è pronto
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', initApp);
-        } else {
-            initApp();
-        }
-
-        // Service Worker per PWA
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                const swCode = `
-                    self.addEventListener('install', (e) => {
-                        e.waitUntil(
-                            caches.open('planner-v1').then((cache) => {
-                                return cache.addAll(['/']);
-                            })
-                        );
-                    });
-                    
-                    self.addEventListener('fetch', (e) => {
-                        e.respondWith(
-                            caches.match(e.request).then((response) => {
-                                return response || fetch(e.request);
-                            })
-                        );
-                    });
-                `;
-                
-                const blob = new Blob([swCode], { type: 'application/javascript' });
-                const swUrl = URL.createObjectURL(blob);
-                navigator.serviceWorker.register(swUrl).catch(() => {});
-            });
-        }
+        // Nasconde prompt installazione dopo 10 secondi
+        setTimeout(() => {
+            document.getElementById('installPrompt').classList.remove('show');
+        }, 10000);
     </script>
 </body>
 </html>
