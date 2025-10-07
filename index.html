@@ -6,6 +6,7 @@
     <meta name="theme-color" content="#2196F3">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="manifest" href="data:application/json;base64,ewogICJuYW1lIjogIk9yZ2FuaXp6YXRvcmUgU2V0dGltYW5hbGUiLAogICJzaG9ydF9uYW1lIjogIlBsYW5uZXIiLAogICJzdGFydF91cmwiOiAiLiIsCiAgImRpc3BsYXkiOiAic3RhbmRhbG9uZSIsCiAgImJhY2tncm91bmRfY29sb3IiOiAiIzIxOTZGMyIsCiAgInRoZW1lX2NvbG9yIjogIiMyMTk2RjMiLAogICJpY29ucyI6IFsKICAgIHsKICAgICAgInNyYyI6ICJkYXRhOmltYWdlL3N2Zyt4bWwsJTNDc3ZnIHhtbG5zPSdodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2Zycgd2lkdGg9JzE5MicgaGVpZ2h0PScxOTInJTNFJTNDcmVjdCB3aWR0aD0nMTkyJyBoZWlnaHQ9JzE5MicgZmlsbD0nJTIzMjE5NkYzJy8lM0UlM0N0ZXh0IHg9Jzk2JyB5PScxMjAnIGZvbnQtc2l6ZT0nODAnIHRleHQtYW5jaG9yPSdtaWRkbGUnIGZpbGw9J3doaXRlJyBmb250LWZhbWlseT0nc2Fucy1zZXJpZiclM0UlRjAlOUYlOTMlODUlM0MvdGV4dCUzRSUzQy9zdmclM0UiLAogICAgICAic2l6ZXMiOiAiMTkyeDE5MiIsCiAgICAgICJ0eXBlIjogImltYWdlL3N2Zyt4bWwiCiAgICB9LAogICAgewogICAgICAic3JjIjogImRhdGE6aW1hZ2Uvc3ZnK3htbCwlM0NzdmcgeG1sbnM9J2h0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnJyB3aWR0aD0nNTEyJyBoZWlnaHQ9JzUxMiclM0UlM0NyZWN0IHdpZHRoPSc1MTInIGhlaWdodD0nNTEyJyBmaWxsPSclMjMyMTk2RjMnLyUzRSUzQ3RleHQgeD0nMjU2JyB5PSczMjAnIGZvbnQtc2l6ZT0nMjAwJyB0ZXh0LWFuY2hvcj0nbWlkZGxlJyBmaWxsPSd3aGl0ZScgZm9udC1mYW1pbHk9J3NhbnMtc2VyaWYnJTNFJUYwJTlGJTkzJTg1JTNDL3RleHQlM0UlM0Mvc3ZnJTNFIiwKICAgICAgInNpemVzIjogIjUxMng1MTIiLAogICAgICAidHlwZSI6ICJpbWFnZS9zdmcreG1sIgogICAgfQogIF0KfQ==">
     <title>Organizzatore Settimanale</title>
     <style>
         * {
@@ -78,7 +79,7 @@
         .header {
             background: linear-gradient(135deg, #2196F3 0%, #1976D2 100%);
             color: white;
-            padding: 12px 16px 8px 16px;
+            padding: 8px 12px 6px 12px;
             text-align: center;
             box-shadow: 0 4px 12px rgba(0,0,0,0.15);
             position: relative;
@@ -89,26 +90,28 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 6px;
-            gap: 4px;
+            margin-bottom: 4px;
+            gap: 6px;
             position: relative;
         }
 
         .today-btn {
-            background: rgba(255,255,255,0.2);
-            border: 1px solid rgba(255,255,255,0.3);
+            background: rgba(255,255,255,0.25);
+            border: 1px solid rgba(255,255,255,0.4);
             color: white;
-            padding: 4px 10px;
+            padding: 6px 12px;
             border-radius: 12px;
-            font-size: 11px;
-            font-weight: 600;
+            font-size: 12px;
+            font-weight: 700;
             cursor: pointer;
             transition: all 0.2s;
             flex-shrink: 0;
+            white-space: nowrap;
         }
 
         .today-btn:active {
-            background: rgba(255,255,255,0.3);
+            background: rgba(255,255,255,0.4);
+            transform: scale(0.95);
         }
 
         .date-display {
@@ -214,7 +217,7 @@
 
         .container {
             position: relative;
-            height: calc(100vh - 120px);
+            height: calc(100vh - 100px);
             overflow: hidden;
             perspective: 1000px;
         }
@@ -234,7 +237,7 @@
             margin-top: 20px;
             display: flex;
             flex-direction: column;
-            padding: 0.5px 0;
+            padding: 0px;
         }
 
         .day-view.no-transition {
@@ -259,10 +262,11 @@
 
         .hour-slot {
             background: white;
-            margin: 0px 4px 0.5px 4px;
-            padding: 1px 4px;
-            border-radius: 2px;
-            box-shadow: 0 1px 1px rgba(0,0,0,0.06);
+            margin: 0px 3px;
+            padding: 0px 3px;
+            border-radius: 0px;
+            box-shadow: none;
+            border-bottom: 0.5px solid #f0f0f0;
             display: flex;
             align-items: center;
             flex: 1;
@@ -271,7 +275,7 @@
             transition: transform 0.1s;
             touch-action: manipulation;
             position: relative;
-            line-height: 1.1;
+            line-height: 1;
         }
 
         .hour-slot:active {
@@ -280,48 +284,51 @@
 
         .hour-time {
             font-weight: bold;
-            font-size: 13px;
+            font-size: 12px;
             color: #2196F3;
-            min-width: 45px;
+            min-width: 42px;
+            padding: 2px 0;
         }
 
         .event-content {
             flex: 1;
-            margin-left: 6px;
+            margin-left: 4px;
             overflow: hidden;
+            padding: 2px 0;
         }
 
         .event-title {
             font-weight: 600;
-            font-size: 13px;
+            font-size: 12px;
             margin-bottom: 0px;
             color: #333;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
-            line-height: 1.1;
+            line-height: 1;
         }
 
         .event-description {
-            font-size: 10px;
+            font-size: 9px;
             color: #666;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
-            line-height: 1.1;
+            line-height: 1;
+            margin-top: 1px;
         }
 
         .hour-slot.has-event {
             background: linear-gradient(135deg, #E3F2FD 0%, #BBDEFB 100%);
-            border-left: 4px solid #2196F3;
+            border-left: 3px solid #2196F3;
         }
 
         .share-btn {
             background: none;
             border: none;
-            font-size: 16px;
+            font-size: 14px;
             cursor: pointer;
-            padding: 0px 3px;
+            padding: 0px 2px;
             opacity: 0.6;
             transition: all 0.2s;
             flex-shrink: 0;
@@ -335,7 +342,7 @@
 
         .empty-state {
             color: #999;
-            font-size: 11px;
+            font-size: 10px;
         }
 
         .modal {
@@ -1147,6 +1154,31 @@
                 closeModal();
             }
         });
+
+        // Service Worker per PWA
+        if ('serviceWorker' in navigator) {
+            const swCode = `
+                self.addEventListener('install', (e) => {
+                    e.waitUntil(
+                        caches.open('planner-v1').then((cache) => {
+                            return cache.addAll(['/']);
+                        })
+                    );
+                });
+                
+                self.addEventListener('fetch', (e) => {
+                    e.respondWith(
+                        caches.match(e.request).then((response) => {
+                            return response || fetch(e.request);
+                        })
+                    );
+                });
+            `;
+            
+            const blob = new Blob([swCode], { type: 'application/javascript' });
+            const swUrl = URL.createObjectURL(blob);
+            navigator.serviceWorker.register(swUrl).catch(() => {});
+        }
     </script>
 </body>
 </html>
