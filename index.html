@@ -67,7 +67,7 @@
             margin-top: 20px;
             display: flex;
             flex-direction: column;
-            padding: 8px 0;
+            padding: 4px 0;
         }
 
         .day-view.no-transition {
@@ -123,8 +123,8 @@
 
         .hour-slot {
             background: white;
-            margin: 2px 8px;
-            padding: 6px 10px;
+            margin: 1px 8px;
+            padding: 4px 8px;
             border-radius: 6px;
             box-shadow: 0 1px 2px rgba(0,0,0,0.08);
             display: flex;
@@ -134,6 +134,7 @@
             cursor: pointer;
             transition: transform 0.1s;
             touch-action: manipulation;
+            position: relative;
         }
 
         .hour-slot:active {
@@ -142,21 +143,21 @@
 
         .hour-time {
             font-weight: bold;
-            font-size: 13px;
+            font-size: 12px;
             color: #2196F3;
-            min-width: 55px;
+            min-width: 50px;
         }
 
         .event-content {
             flex: 1;
-            margin-left: 12px;
+            margin-left: 10px;
             overflow: hidden;
         }
 
         .event-title {
             font-weight: 600;
-            font-size: 13px;
-            margin-bottom: 2px;
+            font-size: 12px;
+            margin-bottom: 1px;
             color: #333;
             white-space: nowrap;
             overflow: hidden;
@@ -164,11 +165,31 @@
         }
 
         .event-description {
-            font-size: 11px;
+            font-size: 10px;
             color: #666;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+        }
+
+        .share-btn {
+            background: none;
+            border: none;
+            font-size: 16px;
+            cursor: pointer;
+            padding: 4px 8px;
+            opacity: 0.6;
+            transition: all 0.2s;
+            flex-shrink: 0;
+        }
+
+        .share-btn:active {
+            opacity: 1;
+            transform: scale(1.2);
+        }
+
+        .share-btn:hover {
+            opacity: 1;
         }
 
         .hour-slot.has-event {
@@ -335,7 +356,7 @@
 
         .empty-state {
             color: #999;
-            font-size: 12px;
+            font-size: 11px;
         }
 
         .swipe-hint {
@@ -384,10 +405,17 @@
             <button class="btn btn-calendar" id="calendarBtn" style="display:none;" onclick="addExistingToCalendar()">
                 📅 Aggiungi a Google Calendar
             </button>
+            <button class="btn btn-danger" id="stopRepeatBtn" style="display:none; margin-top: 8px;" onclick="stopRepeat()">
+                🛑 Ferma Ripetizione
+            </button>
             <div id="newEventCalendarOption" style="margin-top: 12px; text-align: center;">
                 <label style="display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 14px; color: #666; cursor: pointer;">
                     <input type="checkbox" id="addToCalendar" checked style="width: 18px; height: 18px; cursor: pointer;">
                     <span>📅 Aggiungi anche a Google Calendar</span>
+                </label>
+                <label style="display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 14px; color: #666; cursor: pointer; margin-top: 8px;">
+                    <input type="checkbox" id="repeatDaily" style="width: 18px; height: 18px; cursor: pointer;">
+                    <span>🔁 Ripeti tutti i giorni alla stessa ora</span>
                 </label>
             </div>
         </div>
@@ -458,12 +486,63 @@
         function getEvents(date) {
             const key = formatDate(date);
             const stored = localStorage.getItem(key);
+            const dayEvents = stored ? JSON.parse(stored) : {};
+            
+            // Aggiungi eventi ricorrenti
+            const recurringEvents = getRecurringEvents();
+            for (let recurringKey in recurringEvents) {
+                const recurring = recurringEvents[recurringKey];
+                const recurringDate = new Date(recurring.startDate);
+                const checkDate = new Date(date);
+                
+                // Mostra solo se la data corrente è >= data di inizio
+                if (checkDate >= recurringDate) {
+                    const hour = recurring.hour;
+                    // Non sovrascrivere se c'è già un evento specifico per quel giorno
+                    if (!dayEvents[hour]) {
+                        dayEvents[hour] = {
+                            title: recurring.title,
+                            description: recurring.description,
+                            isRecurring: true,
+                            recurringId: recurringKey
+                        };
+                    }
+                }
+            }
+            
+            return dayEvents;
+        }
+
+        function getRecurringEvents() {
+            const stored = localStorage.getItem('recurring_events');
             return stored ? JSON.parse(stored) : {};
+        }
+
+        function saveRecurringEvent(hour, title, description, startDate) {
+            const recurring = getRecurringEvents();
+            const id = `${hour}_${Date.now()}`;
+            recurring[id] = {
+                hour: hour,
+                title: title,
+                description: description,
+                startDate: startDate
+            };
+            localStorage.setItem('recurring_events', JSON.stringify(recurring));
+        }
+
+        function removeRecurringEvent(recurringId) {
+            const recurring = getRecurringEvents();
+            delete recurring[recurringId];
+            localStorage.setItem('recurring_events', JSON.stringify(recurring));
         }
 
         function saveEventToStorage(date, hour, title, description) {
             const key = formatDate(date);
-            const events = getEvents(date);
+            const events = {};
+            const stored = localStorage.getItem(key);
+            if (stored) {
+                Object.assign(events, JSON.parse(stored));
+            }
             events[hour] = { title, description };
             localStorage.setItem(key, JSON.stringify(events));
         }
@@ -499,12 +578,19 @@
                         <div class="hour-time">${timeStr}</div>
                         <div class="event-content">
                             ${hasEvent ? `
-                                <div class="event-title">${event.title}</div>
+                                <div class="event-title">
+                                    ${event.isRecurring ? '🔁 ' : ''}${event.title}
+                                </div>
                                 ${event.description ? `<div class="event-description">${event.description}</div>` : ''}
                             ` : `
                                 <div class="empty-state">Nessun evento</div>
                             `}
                         </div>
+                        ${hasEvent ? `
+                            <button class="share-btn" onclick="shareEvent(event, '${date}', ${hour}, '${event.title.replace(/'/g, "\\'")}', '${event.description ? event.description.replace(/'/g, "\\'") : ''}')">
+                                📤
+                            </button>
+                        ` : ''}
                     </div>
                 `;
             }
@@ -563,9 +649,16 @@
             
             const description = document.getElementById('eventDescription').value.trim();
             const addToCalendar = document.getElementById('addToCalendar').checked;
+            const repeatDaily = document.getElementById('repeatDaily') && document.getElementById('repeatDaily').checked;
             
             // Salva nel localStorage
             saveEventToStorage(currentDate, currentHour, title, description);
+            
+            // Se ripeti, salva come evento ricorrente
+            if (repeatDaily) {
+                saveRecurringEvent(currentHour, title, description, formatDate(currentDate));
+            }
+            
             updateDisplay();
             
             // Aggiungi a Google Calendar se richiesto
@@ -611,7 +704,21 @@
 
         function deleteEvent() {
             if (confirm('Vuoi eliminare questo evento?')) {
-                deleteEventFromStorage(currentDate, currentHour);
+                const events = getEvents(currentDate);
+                const event = events[currentHour];
+                
+                // Se è un evento ricorrente, chiedi se vuole eliminare solo oggi o tutti
+                if (event && event.isRecurring) {
+                    const choice = confirm('Questo è un evento ripetuto.\n\nOK = Elimina solo per oggi\nAnnulla = Torna indietro');
+                    if (choice) {
+                        // Elimina solo per oggi
+                        deleteEventFromStorage(currentDate, currentHour);
+                    }
+                } else {
+                    // Evento normale, elimina
+                    deleteEventFromStorage(currentDate, currentHour);
+                }
+                
                 updateDisplay();
                 closeModal();
             }
