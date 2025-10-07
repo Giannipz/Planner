@@ -262,8 +262,8 @@
 
         .hour-slot {
             background: white;
-            margin: 0px 3px;
-            padding: 0px 3px;
+            margin: 0px 2px;
+            padding: 0px 2px;
             border-radius: 0px;
             box-shadow: none;
             border-bottom: 0.5px solid #f0f0f0;
@@ -271,6 +271,7 @@
             align-items: center;
             flex: 1;
             min-height: 0;
+            height: 24px;
             cursor: pointer;
             transition: transform 0.1s;
             touch-action: manipulation;
@@ -283,23 +284,27 @@
         }
 
         .hour-time {
-            font-weight: bold;
-            font-size: 12px;
+            font-weight: 700;
+            font-size: 11px;
             color: #2196F3;
-            min-width: 42px;
-            padding: 2px 0;
+            min-width: 38px;
+            padding: 0px;
+            line-height: 1;
         }
 
         .event-content {
             flex: 1;
-            margin-left: 4px;
+            margin-left: 3px;
             overflow: hidden;
-            padding: 2px 0;
+            padding: 0px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
         }
 
         .event-title {
             font-weight: 600;
-            font-size: 12px;
+            font-size: 11px;
             margin-bottom: 0px;
             color: #333;
             white-space: nowrap;
@@ -309,7 +314,7 @@
         }
 
         .event-description {
-            font-size: 9px;
+            font-size: 8px;
             color: #666;
             white-space: nowrap;
             overflow: hidden;
@@ -320,15 +325,15 @@
 
         .hour-slot.has-event {
             background: linear-gradient(135deg, #E3F2FD 0%, #BBDEFB 100%);
-            border-left: 3px solid #2196F3;
+            border-left: 2px solid #2196F3;
         }
 
         .share-btn {
             background: none;
             border: none;
-            font-size: 14px;
+            font-size: 13px;
             cursor: pointer;
-            padding: 0px 2px;
+            padding: 0px 1px;
             opacity: 0.6;
             transition: all 0.2s;
             flex-shrink: 0;
@@ -337,12 +342,13 @@
 
         .share-btn:active {
             opacity: 1;
-            transform: scale(1.2);
+            transform: scale(1.15);
         }
 
         .empty-state {
             color: #999;
-            font-size: 10px;
+            font-size: 9px;
+            line-height: 1;
         }
 
         .modal {
@@ -597,6 +603,14 @@
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
 
     <script>
+        // Aspetta che Firebase sia caricato
+        function initApp() {
+            if (typeof firebase === 'undefined') {
+                console.log('Attendo caricamento Firebase...');
+                setTimeout(initApp, 100);
+                return;
+            }
+
         // Firebase Config
         const firebaseConfig = {
             apiKey: "AIzaSyCy2OtSr108Kt4P0yODARUSUj8gRvXa0Ng",
@@ -1155,29 +1169,40 @@
             }
         });
 
+        } // Fine initApp
+
+        // Avvia l'app quando il DOM è pronto
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initApp);
+        } else {
+            initApp();
+        }
+
         // Service Worker per PWA
         if ('serviceWorker' in navigator) {
-            const swCode = `
-                self.addEventListener('install', (e) => {
-                    e.waitUntil(
-                        caches.open('planner-v1').then((cache) => {
-                            return cache.addAll(['/']);
-                        })
-                    );
-                });
+            window.addEventListener('load', () => {
+                const swCode = `
+                    self.addEventListener('install', (e) => {
+                        e.waitUntil(
+                            caches.open('planner-v1').then((cache) => {
+                                return cache.addAll(['/']);
+                            })
+                        );
+                    });
+                    
+                    self.addEventListener('fetch', (e) => {
+                        e.respondWith(
+                            caches.match(e.request).then((response) => {
+                                return response || fetch(e.request);
+                            })
+                        );
+                    });
+                `;
                 
-                self.addEventListener('fetch', (e) => {
-                    e.respondWith(
-                        caches.match(e.request).then((response) => {
-                            return response || fetch(e.request);
-                        })
-                    );
-                });
-            `;
-            
-            const blob = new Blob([swCode], { type: 'application/javascript' });
-            const swUrl = URL.createObjectURL(blob);
-            navigator.serviceWorker.register(swUrl).catch(() => {});
+                const blob = new Blob([swCode], { type: 'application/javascript' });
+                const swUrl = URL.createObjectURL(blob);
+                navigator.serviceWorker.register(swUrl).catch(() => {});
+            });
         }
     </script>
 </body>
