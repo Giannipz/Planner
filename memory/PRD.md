@@ -26,7 +26,7 @@ Utente italiano che vuole un'agenda settimanale leggera, installabile su mobile,
 8. Installabile come PWA (Android/iOS)
 9. Funziona offline (shell cache + eventi locali)
 
-## Implementation Status (v3.0.0 — Apr 2026)
+## Implementation Status (v3.1.0 — Apr 2026)
 - [x] Unificato in singolo `index.html` (v2.1 come base)
 - [x] Rimossi `index-v2.html` e `index-v2.1.html`
 - [x] Token Google persistente con `expires_at` + refresh silenzioso
@@ -44,7 +44,13 @@ Utente italiano che vuole un'agenda settimanale leggera, installabile su mobile,
 - [x] Auto-sync ogni 5 minuti solo se visibile e signed-in
 - [x] Sync al ritorno in foreground (visibilitychange)
 - [x] Keyboard shortcuts (Escape, ←→, Ctrl/Cmd+Enter save)
-- [x] Rimosso CSS morto (login-screen, offline-btn)
+- [x] Welcome screen al primo avvio (spiega sync Google Calendar cross-device)
+- [x] Favicon reale (16/32 PNG + ICO + 180 apple-touch-icon + 192/512 maskable)
+- [x] FAB (Floating Action Button) per creazione rapida evento al prossimo slot
+- [x] Touch target aumentati (min-height 48px hour-slot)
+- [x] Day-chip active con scale + shadow
+- [x] Overscroll pull-to-refresh disabilitato
+- [x] Deployment-ready: backend FastAPI minimale + frontend con build script
 
 ## Structure
 ```
