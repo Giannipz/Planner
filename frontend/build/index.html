@@ -1009,6 +1009,7 @@
             <button class="header-btn" onclick="goToToday()" data-testid="today-btn" aria-label="Vai a oggi">📅 Oggi</button>
             <div class="date-display" id="dateDisplay" data-testid="date-display">Caricamento...</div>
             <button class="header-btn" onclick="manualSync()" id="syncBtn" style="display:none;" data-testid="sync-btn" aria-label="Sincronizza">🔄</button>
+            <button class="header-btn" onclick="toggleNotifications()" id="notifyBtn" data-testid="notify-btn" aria-label="Notifiche">🔔</button>
             <button class="header-btn" onclick="toggleDarkMode()" id="darkModeBtn" data-testid="dark-mode-btn" aria-label="Cambia tema">🌙</button>
         </div>
         <div class="stats-bar">
@@ -1106,6 +1107,18 @@
             <div class="input-group">
                 <label for="eventDescription">Note</label>
                 <textarea id="eventDescription" data-testid="event-description-input" placeholder="Dettagli..."></textarea>
+            </div>
+
+            <div class="input-group">
+                <label for="eventNotify">🔔 Notifica</label>
+                <select id="eventNotify" data-testid="event-notify-select">
+                    <option value="0">Nessuna</option>
+                    <option value="5">5 minuti prima</option>
+                    <option value="10" selected>10 minuti prima</option>
+                    <option value="15">15 minuti prima</option>
+                    <option value="30">30 minuti prima</option>
+                    <option value="60">1 ora prima</option>
+                </select>
             </div>
 
             <div class="checkbox-group" id="newEventOptions">
@@ -1518,6 +1531,7 @@
                 updateSyncStatus('synced');
                 showToast('Sincronizzazione completata');
                 updateDisplay();
+                rescheduleAllNotifications();
             } catch (e) {
                 console.error('Sync error:', e);
                 updateSyncStatus('error');
@@ -1866,6 +1880,7 @@
             document.getElementById('eventTitle').value = event ? event.title : '';
             document.getElementById('eventDescription').value = event ? (event.description || '') : '';
             document.getElementById('eventDuration').value = event ? (event.duration || 60) : 60;
+            document.getElementById('eventNotify').value = event ? String(event.notifyBefore ?? 10) : '10';
 
             selectedCategory = event ? (event.category || 'work') : 'work';
             document.querySelectorAll('.category-btn').forEach(btn => {
@@ -1895,12 +1910,13 @@
 
             const description = document.getElementById('eventDescription').value.trim();
             const duration = parseInt(document.getElementById('eventDuration').value, 10);
+            const notifyBefore = parseInt(document.getElementById('eventNotify').value, 10) || 0;
             const syncToGoogle = document.getElementById('syncToGoogle').checked && isSignedIn;
             const repeatDaily = document.getElementById('repeatDaily').checked;
             const repeatWeekly = document.getElementById('repeatWeekly').checked;
             const repeatMonthly = document.getElementById('repeatMonthly').checked;
 
-            const eventData = { title, description, duration, category: selectedCategory, repeatDaily, repeatWeekly, repeatMonthly };
+            const eventData = { title, description, duration, category: selectedCategory, notifyBefore, repeatDaily, repeatWeekly, repeatMonthly };
             saveEventLocally(currentDate, currentSlot, eventData);
 
             if (syncToGoogle) {
@@ -1920,6 +1936,7 @@
             }
 
             updateDisplay();
+            rescheduleAllNotifications();
             closeModal();
         }
 
@@ -1940,6 +1957,7 @@
 
             showToast('Evento eliminato');
             updateDisplay();
+            rescheduleAllNotifications();
             closeModal();
         }
 
@@ -2047,7 +2065,157 @@
             }
         });
 
-        // ==================== PWA INSTALL ====================
+        // ==================== LOCAL NOTIFICATIONS ====================
+        const scheduledTimeouts = new Map(); // key: "date_slotKey" -> timeoutId
+
+        function notificationsSupported() {
+            return 'Notification' in window && 'serviceWorker' in navigator;
+        }
+
+        function notificationsEnabled() {
+            return notificationsSupported() && Notification.permission === 'granted';
+        }
+
+        function updateNotifyBtn() {
+            const btn = document.getElementById('notifyBtn');
+            if (!btn) return;
+            if (!notificationsSupported()) {
+                btn.style.display = 'none';
+                return;
+            }
+            const p = Notification.permission;
+            if (p === 'granted') {
+                btn.textContent = '🔔';
+                btn.title = 'Notifiche attive';
+            } else if (p === 'denied') {
+                btn.textContent = '🔕';
+                btn.title = 'Notifiche bloccate dal browser';
+            } else {
+                btn.textContent = '🔔';
+                btn.style.opacity = '0.6';
+                btn.title = 'Abilita notifiche';
+            }
+        }
+
+        async function toggleNotifications() {
+            if (!notificationsSupported()) {
+                showToast('Notifiche non supportate da questo browser');
+                return;
+            }
+            const p = Notification.permission;
+            if (p === 'granted') {
+                showToast('Notifiche già attive ✓');
+                rescheduleAllNotifications();
+                return;
+            }
+            if (p === 'denied') {
+                showToast('Permessi bloccati. Abilita le notifiche dalle impostazioni del browser.', 4500);
+                return;
+            }
+            try {
+                const result = await Notification.requestPermission();
+                updateNotifyBtn();
+                if (result === 'granted') {
+                    showToast('Notifiche attivate! 🔔');
+                    // Test notification
+                    showLocalNotification('Planner', { body: 'Notifiche attive! Ti avviserò prima di ogni evento.' });
+                    rescheduleAllNotifications();
+                } else {
+                    showToast('Permessi negati');
+                }
+            } catch (e) {
+                console.error('Notification permission error:', e);
+                showToast('Errore richiesta permessi');
+            }
+        }
+
+        async function showLocalNotification(title, options) {
+            if (!notificationsEnabled()) return;
+            const opts = Object.assign({
+                icon: 'icon-192.png',
+                badge: 'favicon-32.png',
+                vibrate: [200, 100, 200],
+                tag: 'planner-event',
+                renotify: true,
+                requireInteraction: false
+            }, options || {});
+            try {
+                // Prefer SW registration (works in background)
+                if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
+                    const reg = await navigator.serviceWorker.ready;
+                    await reg.showNotification(title, opts);
+                } else {
+                    new Notification(title, opts);
+                }
+            } catch (e) {
+                console.warn('Failed to show notification:', e);
+                try { new Notification(title, opts); } catch (_) {}
+            }
+        }
+
+        function clearAllScheduledNotifications() {
+            scheduledTimeouts.forEach(id => clearTimeout(id));
+            scheduledTimeouts.clear();
+        }
+
+        function scheduleNotificationForEvent(dateKey, slotKey, event) {
+            if (!notificationsEnabled()) return;
+            if (!event || !event.title) return;
+            const notifyMin = Number(event.notifyBefore);
+            if (!notifyMin || notifyMin <= 0) return;
+
+            const [y, mo, d] = dateKey.split('-').map(Number);
+            const [h, mi] = slotKey.split(':').map(Number);
+            const eventTime = new Date(y, mo - 1, d, h, mi, 0, 0);
+            const notifyTime = eventTime.getTime() - notifyMin * 60000;
+            const now = Date.now();
+            const delay = notifyTime - now;
+
+            // Only schedule future notifications within next 7 days (browser timeout reliability)
+            if (delay <= 0 || delay > 7 * 24 * 60 * 60 * 1000) return;
+
+            const key = `${dateKey}_${slotKey}`;
+            // Clear existing
+            if (scheduledTimeouts.has(key)) {
+                clearTimeout(scheduledTimeouts.get(key));
+            }
+
+            const timeId = setTimeout(() => {
+                const when = `${slotKey}${notifyMin >= 60 ? ' (tra ' + Math.round(notifyMin/60) + 'h)' : ' (tra ' + notifyMin + ' min)'}`;
+                showLocalNotification(`📅 ${event.title}`, {
+                    body: `Inizia alle ${slotKey}${event.description ? ' — ' + event.description : ''}`,
+                    tag: `planner-${key}`,
+                    data: { dateKey, slotKey }
+                });
+                scheduledTimeouts.delete(key);
+            }, delay);
+            scheduledTimeouts.set(key, timeId);
+        }
+
+        function rescheduleAllNotifications() {
+            clearAllScheduledNotifications();
+            if (!notificationsEnabled()) return;
+
+            // Look at next 7 days of events (both local and cached Google)
+            const now = new Date();
+            for (let dayOffset = 0; dayOffset < 7; dayOffset++) {
+                const d = new Date(now);
+                d.setDate(d.getDate() + dayOffset);
+                const dateKey = formatDate(d);
+
+                // Combine local + Google events
+                const stored = localStorage.getItem(`events_${dateKey}`);
+                const localEvents = stored ? JSON.parse(stored) : {};
+                const googleEvents = googleEventsCache[dateKey] || {};
+                const merged = { ...localEvents, ...googleEvents };
+
+                for (const slotKey in merged) {
+                    scheduleNotificationForEvent(dateKey, slotKey, merged[slotKey]);
+                }
+            }
+        }
+
+
         function isIOS() {
             return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
         }
@@ -2100,6 +2268,9 @@
             }
 
             updateDisplay();
+            updateNotifyBtn();
+            // Schedule notifications for already-stored events
+            rescheduleAllNotifications();
 
             // Register Service Worker
             if ('serviceWorker' in navigator) {

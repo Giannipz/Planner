@@ -1,6 +1,6 @@
 // Service Worker - Planner PWA
 // Minimal cache strategy: cache app shell, network-first for everything else
-const CACHE_VERSION = 'planner-v3.0.0';
+const CACHE_VERSION = 'planner-v3.2.0';
 const APP_SHELL = [
   './',
   './index.html',
@@ -75,4 +75,18 @@ self.addEventListener('fetch', event => {
 // Allow page to trigger skipWaiting
 self.addEventListener('message', event => {
   if (event.data && event.data.type === 'SKIP_WAITING') self.skipWaiting();
+});
+
+// Handle notification click - focus or open the app
+self.addEventListener('notificationclick', event => {
+  event.notification.close();
+  const urlToOpen = new URL('./index.html', self.location.origin).href;
+  event.waitUntil(
+    self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then(clientList => {
+      for (const client of clientList) {
+        if ('focus' in client) return client.focus();
+      }
+      if (self.clients.openWindow) return self.clients.openWindow(urlToOpen);
+    })
+  );
 });

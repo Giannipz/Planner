@@ -26,31 +26,31 @@ Utente italiano che vuole un'agenda settimanale leggera, installabile su mobile,
 8. Installabile come PWA (Android/iOS)
 9. Funziona offline (shell cache + eventi locali)
 
-## Implementation Status (v3.1.0 — Apr 2026)
+## Implementation Status (v3.2.0 — Apr 2026)
 - [x] Unificato in singolo `index.html` (v2.1 come base)
 - [x] Rimossi `index-v2.html` e `index-v2.1.html`
 - [x] Token Google persistente con `expires_at` + refresh silenzioso
 - [x] Auto-restore sessione all'avvio (user info da cache + token valido)
 - [x] Su 401 non elimina dati locali (solo mostra "accedi per rinnovare")
 - [x] PWA manifest con `id`, `start_url: ./index.html`, icons any+maskable
-- [x] SW v3: network-first per navigation, cache-first per shell, bypass Google APIs
+- [x] SW v3.2: network-first per navigation, cache-first per shell, bypass Google APIs, notificationclick handler
 - [x] Install banner con fallback iOS ("Aggiungi a Home")
 - [x] Dark mode con toggle icona dinamica + theme-color meta update
 - [x] Safe-area iOS (notch) tramite `env(safe-area-inset-*)`
-- [x] Fix swipe vs click (suppressNextClick per evitare apertura modal dopo swipe)
+- [x] Fix swipe vs click
 - [x] Fix XSS su titoli evento (escapeHtml)
 - [x] data-testid su tutti gli elementi interattivi
 - [x] Online/offline detection con toast + auto-sync su ripristino
-- [x] Auto-sync ogni 5 minuti solo se visibile e signed-in
+- [x] Auto-sync ogni 5 minuti (solo se visibile e signed-in)
 - [x] Sync al ritorno in foreground (visibilitychange)
 - [x] Keyboard shortcuts (Escape, ←→, Ctrl/Cmd+Enter save)
 - [x] Welcome screen al primo avvio (spiega sync Google Calendar cross-device)
 - [x] Favicon reale (16/32 PNG + ICO + 180 apple-touch-icon + 192/512 maskable)
-- [x] FAB (Floating Action Button) per creazione rapida evento al prossimo slot
-- [x] Touch target aumentati (min-height 48px hour-slot)
-- [x] Day-chip active con scale + shadow
+- [x] FAB per creazione rapida evento al prossimo slot
+- [x] Touch target aumentati (min 48px)
 - [x] Overscroll pull-to-refresh disabilitato
 - [x] Deployment-ready: backend FastAPI minimale + frontend con build script
+- [x] **Notifiche push locali**: bottone 🔔 in header, selettore "Notifica" nel modale (5/10/15/30/60 min prima), scheduling via setTimeout, notifiche mostrate via Service Worker (funzionano in background), click-to-focus
 
 ## Structure
 ```
