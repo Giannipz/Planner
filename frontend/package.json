@@ -1,12 +1,17 @@
 {
-  "name": "planner-pwa-static",
+  "name": "planner-pwa",
   "version": "3.0.0",
   "private": true,
-  "description": "Static server for Planner PWA (serves /app)",
+  "description": "Planner - Organizzatore Settimanale (Static PWA)",
   "scripts": {
-    "start": "serve -s .. -l tcp://0.0.0.0:${PORT:-3000} --no-clipboard --single"
+    "build": "rm -rf build && mkdir -p build && cp -r public/. build/",
+    "start": "serve -s build -l tcp://0.0.0.0:${PORT:-3000} --no-clipboard --single",
+    "dev": "serve -s public -l tcp://0.0.0.0:${PORT:-3000} --no-clipboard --single"
   },
   "dependencies": {
     "serve": "^14.2.3"
+  },
+  "engines": {
+    "node": ">=18"
   }
 }

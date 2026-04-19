@@ -49,12 +49,26 @@ Utente italiano che vuole un'agenda settimanale leggera, installabile su mobile,
 ## Structure
 ```
 /app
-├── index.html       # 73KB - single-file app (HTML+CSS+JS)
-├── manifest.json    # PWA manifest
-├── sw.js            # Service worker v3
-└── frontend/
-    └── package.json # serve ../ on port 3000
+├── backend/
+│   ├── server.py         # Minimal FastAPI (health endpoints only, /api/ and /api/health)
+│   ├── requirements.txt  # fastapi, uvicorn, pydantic, python-dotenv
+│   └── .env              # MONGO_URL, DB_NAME, CORS_ORIGINS
+├── frontend/
+│   ├── public/           # Source static files
+│   │   ├── index.html    # Main app (HTML+CSS+JS)
+│   │   ├── manifest.json # PWA manifest
+│   │   └── sw.js         # Service worker v3
+│   ├── build/            # Build output (served)
+│   ├── package.json      # scripts: build (copy public→build) + start (serve build)
+│   └── .env              # REACT_APP_BACKEND_URL
+└── memory/PRD.md
 ```
+
+## Deployment
+- Frontend: `yarn install && yarn build` → `yarn start` serves `build/` on port 3000
+- Backend: `uvicorn server:app --host 0.0.0.0 --port 8001` exposes `/api/` and `/api/health`
+- Health check: GET `/api/health` returns `{status: ok}`
+- No MongoDB actually used (env vars present to satisfy platform requirements)
 
 ## Backlog / Future Enhancements
 - **P1** Esportazione eventi (CSV/ICS)
