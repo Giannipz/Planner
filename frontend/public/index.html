@@ -22,8 +22,8 @@
     <link rel="mask-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20'/></svg>" color="#2196F3">
 
     <!-- Google API (carico in parallelo, init in window.onload) -->
-    <script src="https://accounts.google.com/gsi/client" async defer></script>
-    <script src="https://apis.google.com/js/api.js" async defer></script>
+    <script src="https://accounts.google.com/gsi/client" async defer onload="gisLoaded()"></script>
+    <script src="https://apis.google.com/js/api.js" async defer onload="gapiLoaded()"></script>
 
     <style>
         :root {
@@ -1168,7 +1168,7 @@
 
     <script>
         // ==================== CONFIGURATION ====================
-        const GOOGLE_CLIENT_ID = '996979014891-cik6odg0ad64ruugr61g4dk34h1nlh11.apps.googleusercontent.com';
+        const GOOGLE_CLIENT_ID = '838725539921-2otpkfdhppupskr2uikoqmaskuj7tu9e.apps.googleusercontent.com';
         const SCOPES = 'https://www.googleapis.com/auth/calendar.events https://www.googleapis.com/auth/userinfo.profile';
         const DISCOVERY_DOC = 'https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest';
 
