@@ -63,7 +63,7 @@ async def health():
 GOOGLE_TOKEN_ENDPOINT = "https://oauth2.googleapis.com/token"
 GOOGLE_CLIENT_ID = os.environ.get(
     "GOOGLE_CLIENT_ID",
-    "1067431857661-er9dceia145li67gcoutduannrc7k8vh.apps.googleusercontent.com",
+    "545488393108-ibhn8aahc7v8gngsoitmccn0l5dorp7d.apps.googleusercontent.com",
 )
 GOOGLE_CLIENT_SECRET = os.environ.get("GOOGLE_CLIENT_SECRET")
 
