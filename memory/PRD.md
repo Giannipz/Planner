@@ -7,10 +7,10 @@ Unificare le tre versioni (`index.html`, `index-v2.html`, `index-v2.1.html`) in 
 
 ## Architecture
 - **Static single-page app**: `index.html` + `manifest.json` + `sw.js`
-- **Storage**: `localStorage` per eventi, token Google, preferenze UI
-- **Auth**: Google OAuth2 (GIS + GAPI), client-side only, token con expiry
+- **Storage**: `localStorage` per eventi, token Google (incluso refresh_token), preferenze UI
+- **Auth**: Google OAuth2 authorization-code flow (GIS `initCodeClient`, popup). Il code viene scambiato dal backend (unico posto che conosce il `GOOGLE_CLIENT_SECRET`) per un `access_token` + `refresh_token`; il `refresh_token` non scade per mesi (finché non revocato o app in stato "Testing" su Google Cloud) e permette il rinnovo silenzioso senza dipendere dai cookie del browser
 - **Calendar sync**: Google Calendar API (opzionale, app funziona anche offline)
-- **Hosting**: statico (serve `/app` su porta 3000 tramite `serve`)
+- **Hosting**: frontend statico su Vercel + backend FastAPI come Vercel Python Function sotto `/api` (vedi `api/index.py`)
 
 ## User Persona
 Utente italiano che vuole un'agenda settimanale leggera, installabile su mobile, con opzionale sync Google Calendar, utilizzabile anche offline.
@@ -86,7 +86,9 @@ Utente italiano che vuole un'agenda settimanale leggera, installabile su mobile,
 - **P3** Sincronizzazione multi-dispositivo (richiederebbe backend)
 
 ## Tech Notes
-- Google Client ID hardcoded (progetto esistente)
-- Token access_token durata ~1h → buffer 30s prima di considerarlo scaduto
-- SW bypassa totalmente le chiamate a `googleapis.com`, `accounts.google.com`, `gstatic.com`
-- Cache versione: `planner-v3.0.0` (incrementare su major changes)
+- Google Client ID hardcoded (progetto esistente), Client Secret SOLO come env var backend (`GOOGLE_CLIENT_SECRET`, mai nel frontend)
+- Token access_token durata ~1h → buffer 30s prima di considerarlo scaduto; rinnovato via `POST /api/auth/google/refresh` usando il `refresh_token` salvato in `localStorage`
+- `redirect_uri` per lo scambio del code lato server è la stringa speciale `postmessage` (richiesta da GIS in popup mode)
+- **Importante**: perché il `refresh_token` duri mesi (e non solo 7 giorni), lo stato di pubblicazione dell'OAuth consent screen su Google Cloud Console deve essere "In production", non "Testing"
+- SW bypassa totalmente le chiamate a `googleapis.com`, `accounts.google.com`, `gstatic.com` (le chiamate a `/api/auth/*` sono same-origin, non toccate dal bypass)
+- Cache versione: `planner-v3.2.1` (incrementare su major changes, forza pulizia cache SW sui client)
