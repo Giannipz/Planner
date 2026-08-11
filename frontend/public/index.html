@@ -1171,6 +1171,9 @@
         const GOOGLE_CLIENT_ID = '996979014891-cik6odg0ad64ruugr61g4dk34h1nlh11.apps.googleusercontent.com';
         const SCOPES = 'https://www.googleapis.com/auth/calendar.events https://www.googleapis.com/auth/userinfo.profile';
         const DISCOVERY_DOC = 'https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest';
+        const GOOGLE_TOKEN_KEY = 'google_token';
+        const GOOGLE_USER_KEY = 'user_info';
+        const TOKEN_EXPIRY_MARGIN_MS = 60 * 1000;
 
         // ==================== STATE ====================
         let currentDate = new Date();
@@ -1188,6 +1191,7 @@
         let deferredPrompt = null;
         let googleEventsCache = {};
         let lastSyncTime = null;
+        let tokenRefreshTimer = null;
 
         // ==================== ITALIAN HOLIDAYS ====================
         const FIXED_HOLIDAYS = [
@@ -1254,7 +1258,7 @@
         function shouldShowWelcome() {
             // Don't show if user has already dismissed it OR is already logged in OR has events
             if (localStorage.getItem('welcome_dismissed') === 'true') return false;
-            if (localStorage.getItem('google_token')) return false;
+            if (localStorage.getItem(GOOGLE_TOKEN_KEY)) return false;
             const hasEvents = Object.keys(localStorage).some(k => k.startsWith('events_'));
             return !hasEvents;
         }
@@ -1334,15 +1338,20 @@
 
         function getStoredToken() {
             try {
-                const raw = localStorage.getItem('google_token');
+                const raw = localStorage.getItem(GOOGLE_TOKEN_KEY);
                 if (!raw) return null;
                 const data = JSON.parse(raw);
-                // Check expiry (stored as absolute ms timestamp)
-                if (data.expires_at && Date.now() >= data.expires_at) {
+                if (!data.access_token || !Number.isFinite(data.expires_at)) {
+                    localStorage.removeItem(GOOGLE_TOKEN_KEY);
+                    return null;
+                }
+                // Treat tokens close to expiry as expired to avoid failing mid-request.
+                if (Date.now() >= data.expires_at - TOKEN_EXPIRY_MARGIN_MS) {
                     return { ...data, expired: true };
                 }
                 return data;
             } catch (e) {
+                localStorage.removeItem(GOOGLE_TOKEN_KEY);
                 return null;
             }
         }
@@ -1355,9 +1364,38 @@
                 token_type: tokenResponse.token_type || 'Bearer',
                 scope: tokenResponse.scope || SCOPES,
                 expires_in: expiresIn,
-                expires_at: Date.now() + (expiresIn * 1000) - 30000 // 30s safety buffer
+                expires_at: Date.now() + (expiresIn * 1000)
             };
-            localStorage.setItem('google_token', JSON.stringify(data));
+            localStorage.setItem(GOOGLE_TOKEN_KEY, JSON.stringify(data));
+            scheduleTokenRefresh(data);
+        }
+
+        function clearTokenRefreshTimer() {
+            if (tokenRefreshTimer !== null) {
+                clearTimeout(tokenRefreshTimer);
+                tokenRefreshTimer = null;
+            }
+        }
+
+        function scheduleTokenRefresh(token) {
+            clearTokenRefreshTimer();
+            const delay = Math.max(0, token.expires_at - Date.now() - TOKEN_EXPIRY_MARGIN_MS);
+            tokenRefreshTimer = setTimeout(() => {
+                // OAuth popups must originate from a user gesture in many browsers.
+                // Keep the account visible and ask for one click instead of logging out.
+                markGoogleSessionForRenewal();
+            }, delay);
+        }
+
+        function markGoogleSessionForRenewal() {
+            clearTokenRefreshTimer();
+            isSignedIn = false;
+            gapi.client.setToken(null);
+            localStorage.removeItem(GOOGLE_TOKEN_KEY);
+            showCachedUserUI();
+            updateApiStatus('syncing', 'Rinnova accesso');
+            updateSyncStatus('offline');
+            showToast('Tocca Sincronizza per rinnovare l’accesso Google', 4000);
         }
 
         function maybeEnableButtons() {
@@ -1370,7 +1408,7 @@
                 updateApiStatus('online', 'Pronto');
 
                 // Restore cached user info immediately (instant UX)
-                const cachedUser = localStorage.getItem('user_info');
+                const cachedUser = localStorage.getItem(GOOGLE_USER_KEY);
                 if (cachedUser) {
                     try {
                         const user = JSON.parse(cachedUser);
@@ -1384,16 +1422,17 @@
                 if (stored && !stored.expired) {
                     try {
                         gapi.client.setToken({ access_token: stored.access_token });
+                        scheduleTokenRefresh(stored);
                         handleSignedIn(false); // don't re-fetch user if we have cache
                     } catch (e) {
                         console.warn('Token restore failed:', e);
-                        localStorage.removeItem('google_token');
+                        localStorage.removeItem(GOOGLE_TOKEN_KEY);
                     }
                 } else if (stored && stored.expired && cachedUser) {
-                    // Show last known user info, silently request new token on next API call
+                    // Keep the account visible. Renewal happens after a user gesture,
+                    // which prevents popup blockers from breaking persistent login.
                     showCachedUserUI();
-                    updateApiStatus('syncing', 'Token scaduto');
-                    showToast('Sessione scaduta - accedi per sincronizzare', 4000);
+                    updateApiStatus('syncing', 'Rinnova accesso');
                 }
             } else if (gapiInited || gisInited) {
                 updateApiStatus('syncing', 'Caricamento...');
@@ -1420,13 +1459,17 @@
                     updateApiStatus('error', 'Errore auth');
                     return;
                 }
+                // GIS does not reliably populate the gapi client token automatically.
+                // Set it explicitly before fetching profile or calendar data.
+                gapi.client.setToken({ access_token: resp.access_token });
                 storeToken(resp);
                 handleSignedIn(true);
             };
 
             const existingToken = gapi.client.getToken();
             if (existingToken === null || !existingToken.access_token) {
-                tokenClient.requestAccessToken({ prompt: 'consent' });
+                const returningUser = Boolean(localStorage.getItem(GOOGLE_USER_KEY));
+                tokenClient.requestAccessToken({ prompt: returningUser ? '' : 'consent' });
             } else {
                 tokenClient.requestAccessToken({ prompt: '' });
             }
@@ -1453,7 +1496,7 @@
                 const user = await response.json();
                 document.getElementById('userAvatar').src = user.picture || '';
                 document.getElementById('userName').textContent = user.name || user.email || 'Utente';
-                localStorage.setItem('user_info', JSON.stringify(user));
+                localStorage.setItem(GOOGLE_USER_KEY, JSON.stringify(user));
             } catch (e) {
                 console.warn('Failed to get user info:', e);
             }
@@ -1464,12 +1507,13 @@
                 const token = gapi.client.getToken();
                 if (token && token.access_token) {
                     google.accounts.oauth2.revoke(token.access_token, () => {});
-                    gapi.client.setToken('');
+                    gapi.client.setToken(null);
                 }
             } catch (e) { /* ignore */ }
 
-            localStorage.removeItem('google_token');
-            localStorage.removeItem('user_info');
+            clearTokenRefreshTimer();
+            localStorage.removeItem(GOOGLE_TOKEN_KEY);
+            localStorage.removeItem(GOOGLE_USER_KEY);
             isSignedIn = false;
             googleEventsCache = {};
 
@@ -1537,15 +1581,7 @@
                 updateSyncStatus('error');
                 if (e.status === 401 || (e.result && e.result.error && e.result.error.code === 401)) {
                     // Token truly expired - mark as expired but keep events cache + user_info
-                    localStorage.removeItem('google_token');
-                    isSignedIn = false;
-                    updateApiStatus('error', 'Sessione scaduta');
-                    showToast('Sessione scaduta - clicca "Accedi" per rinnovare', 4000);
-                    // Show login but keep user cached display
-                    document.getElementById('loginSection').style.display = 'block';
-                    document.getElementById('userSection').style.display = 'none';
-                    document.getElementById('logoutSection').style.display = 'none';
-                    document.getElementById('syncBtn').style.display = 'none';
+                    markGoogleSessionForRenewal();
                 } else {
                     showToast('Errore rete, dati locali disponibili');
                 }
@@ -1590,7 +1626,13 @@
             }
         }
 
-        function manualSync() { syncWithGoogle(); }
+        function manualSync() {
+            if (!isSignedIn && localStorage.getItem(GOOGLE_USER_KEY)) {
+                signInWithGoogle();
+                return;
+            }
+            syncWithGoogle();
+        }
 
         function getColorFromCategory(category) {
             return { work: '9', personal: '3', health: '10', meeting: '5', urgent: '11' }[category] || '9';
